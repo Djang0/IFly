@@ -2,25 +2,62 @@ const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 const config = JSON.parse(fs.readFileSync('config.json'));
 var template = fs.readFileSync('template.html').toString();
-let flights_table = "";
 
+const capitalize = (s) => {
+  if (typeof s !== 'string') return ''
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
 
+if (fs.existsSync(config.build_path)) {
+  if (fs.existsSync('pilot.png')) {
+    fs.writeFileSync(config.build_path + "pilot.png",fs.readFileSync('pilot.png'));
+  }
+  if (fs.existsSync('util.js')) {
+    fs.writeFileSync(config.build_path + "util.js",fs.readFileSync('util.js'));
+  }
+}
 
 processFlights = function(data) {
 
-  //if (fs.existsSync(path)) {
-      // Do something
-  //}
-
-
-  flights_table += "<table id='flights_table' class='display'> ";
-  flights_table += "<thead><tr><th>Date</th><th>Site</th></tr></thead><tbody>";
+  flights = [];
+  wings = [];
+  sites = [];
+  seasons = [];
   data.forEach((row) => {
-    flights_table += "<tr><td>" + row.V_Date + "</td><td>" + row.V_Site + "</td></tr>";
-  });
-  flights_table += "</tbody></table> ";
+    flight = {};
+    flight.date = row.V_Date;
 
-  template = template.split("{{{flights.table}}}").join(flights_table);
+    flight.duration = row.V_sDuree;
+
+    wing="" ;
+    if (row.V_Engin=="") {
+      wing="Unknown";
+    }else {
+      wing=capitalize(row.V_Engin.toLowerCase());
+    }
+    flight.wing = wing;
+    if (!wings.includes(wing)) {
+      wings.push(wing);
+    }
+
+    site="";
+    if (row.V_Site=="") {
+      site="Unknown";
+    }else {
+      site=capitalize(row.V_Site.toLowerCase());
+    }
+    flight.site = site;
+    if (!sites.includes(site)) {
+      sites.push(site);
+    }
+
+    flights.push(flight);
+
+  });
+
+
+  template = template.split("aa9f3975e1ac31d104905da5d2fa2d79").join(JSON.stringify(wings));
+  template = template.split("f71dbe52628a3f83a77ab494817525c6").join(JSON.stringify(flights));
   template = template.split("{{{pilot.name}}}").join(config.pilot);
   location = "";
   if (config.country != "" && config.country !== undefined) {
