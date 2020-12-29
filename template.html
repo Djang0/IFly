@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js" ></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+  <title>{{{pilot.name}}}'s pilot page</title>
+</head>
+
+<body>
+
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pricing</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="nb_wings" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                All wings
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item wing_item" id="wing_0" href="#">All</a></li>
+                <li><a class="dropdown-item wing_item" id="wing_1" href="#">Alpha 6</a></li>
+                <li><a class="dropdown-item wing_item" id="wing_2" href="#">Tenor</a></li>
+                <li><a class="dropdown-item wing_item" id="wing_3" href="#">Enzo 3</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="nb_years" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                All years
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item year_item" id="year_0" href="#">All</a></li>
+                <li><a class="dropdown-item year_item" id="year_1" href="#">2020</a></li>
+                <li><a class="dropdown-item year_item" id="year_2" href="#">2019</a></li>
+                <li><a class="dropdown-item year_item" id="year_3" href="#">2018</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="nb_sites" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                All sites
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item site_item" id="site_0" href="#">All</a></li>
+                <li><a class="dropdown-item site_item" id="site_1" href="#">Coo</a></li>
+                <li><a class="dropdown-item site_item" id="site_2" href="#">Corimont</a></li>
+                <li><a class="dropdown-item site_item" id="site_3" href="#">Rochefort</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <br />
+    <div class="row" data-masonry='{"percentPosition": true }'>
+      <div class="col-sm-6 col-lg-2 mb-4">
+
+        <div class="card">
+          <img src="pilot.png" class="card-img-top rounded-circle mx-auto d-block " style="width:60%" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{{pilot.name}}}</h5>
+            <h6 class="card-subtitle mb-4 text-muted">{{{pilot.location}}}</h6>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-6 col-lg-2 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-6 col-lg-2 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-6 col-lg-2 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-6 col-lg-2 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-12 col-lg-8 mb-6">
+        <div class="card">
+          <div class="card-body">
+            <p class="card-text">
+              {{{flights.table}}}
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+    </div><!-- row -->
+
+  </div><!-- container-fluid -->
+
+<script type="text/javascript">
+$(document).ready( function () {
+  var table = $('#flights_table').DataTable({aaSorting : [[0, 'desc']]});
+
+} );
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+
+</body>
+
+</html>
