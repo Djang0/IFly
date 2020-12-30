@@ -8,17 +8,23 @@
   <!-- TODO: amcharts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
   <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
   <script src="util.js"></script>
   <script type="text/javascript">
     const allData = f71dbe52628a3f83a77ab494817525c6;
     let filteredData = allData;
-    const allWings = aa9f3975e1ac31d104905da5d2fa2d79;
-    let filteredWings = allWings
-
+    const wings = [...new Set(allData.map(item => item.wing))].sort();
+    const years = [...new Set(allData.map(item => item.year))].sort();
+    const sites = [...new Set(allData.map(item => item.site))].sort();
+    let appliedFilters = [0, 0, 0]; // wing/year/site
+    let filterStrings = ['', '', ''];
   </script>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
   <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.dataTables.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/rowgroup/1.1.2/css/rowGroup.dataTables.min.css" rel="stylesheet">
   <title>{{{pilot.name}}}'s pilot page</title>
 </head>
 
@@ -46,7 +52,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="nb_wings" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 All wings
               </a>
-              <ul class="dropdown-menu" id="wingsFilter" aria-labelledby="navbarDropdownMenuLink">
+              <ul class="dropdown-menu " id="wingsFilter" aria-labelledby="navbarDropdownMenuLink">
                 <li><a class="dropdown-item wing_item" id="wing_0" href="#">All</a></li>
                 <li><a class="dropdown-item wing_item" id="wing_1" href="#">Alpha 6</a></li>
                 <li><a class="dropdown-item wing_item" id="wing_2" href="#">Tenor</a></li>
@@ -57,18 +63,20 @@
               <a class="nav-link dropdown-toggle" href="#" id="nb_years" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 All years
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <ul class="dropdown-menu " id="yearsFilter" aria-labelledby="navbarDropdownMenuLink">
+                <li>
+
                 <li><a class="dropdown-item year_item" id="year_0" href="#">All</a></li>
                 <li><a class="dropdown-item year_item" id="year_1" href="#">2020</a></li>
                 <li><a class="dropdown-item year_item" id="year_2" href="#">2019</a></li>
                 <li><a class="dropdown-item year_item" id="year_3" href="#">2018</a></li>
               </ul>
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown" id="site_down">
               <a class="nav-link dropdown-toggle" href="#" id="nb_sites" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 All sites
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <ul class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink" id="sitesFilter">
                 <li><a class="dropdown-item site_item" id="site_0" href="#">All</a></li>
                 <li><a class="dropdown-item site_item" id="site_1" href="#">Coo</a></li>
                 <li><a class="dropdown-item site_item" id="site_2" href="#">Corimont</a></li>
@@ -81,7 +89,7 @@
     </nav>
     <br />
     <div class="row" data-masonry='{"percentPosition": true }'>
-      <div class="col-sm-6 col-lg-2 mb-4">
+      <div class="col-sm-6 col-lg-2 mb-2">
 
         <div class="card">
           <img src="pilot.png" class="card-img-top rounded-circle mx-auto d-block " style="width:60%" alt="...">
@@ -139,43 +147,149 @@
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
+      <div class="col-sm-6 col-lg-2 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
       <div class="col-sm-12 col-lg-8 mb-6">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">All flights</h5>
             <p class="card-text">
               <!-- {{{flights.table}}} -->
-            <table id='flights_table' class='display'></table>
+            <table id='flights_table' class='display nowrap' style="width:100%"></table>
             </p>
 
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
+
+      <div class="col-sm-6 col-lg-2 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+
+      <div class="col-sm-6 col-lg-2 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+
+      <div class="col-sm-6 col-lg-2 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+
     </div><!-- row -->
 
   </div><!-- container-fluid -->
 
   <script type="text/javascript">
     $(document).ready(function() {
-      redrawWingsFilter(filteredWings);
+      redrawWingsFilter(wings);
+      redrawYearsFilter(years);
+      redrawSitesFilter(sites);
       redrawViz(filteredData);
 
+      $("#site_input").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#sitesFilter li.filterable").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+
+      $('.year_item').click(function() {
+        year_label = $(this).text();
+        if ($(this).attr("id") == 'season_0') {
+          appliedFilters[1] = 0; // wing/year/site
+          filterStrings[1] = '';
+        } else {
+          appliedFilters[1] = 1; // wing/year/site
+          filterStrings[1] = year_label;
+        }
+        $('#nb_years').text(year_label);
+        filteredData = applyFilters(allData, appliedFilters, filterStrings);
+        redrawViz(filteredData);
+      });
 
       $('.wing_item').click(function() {
         wing_label = $(this).text();
+        if ($(this).attr("id") == 'wing_0') {
+          appliedFilters[0] = 0; // wing/year/site
+          filterStrings[0] = '';
+        } else {
+          appliedFilters[0] = 1; // wing/year/site
+          filterStrings[0] = wing_label;
+        }
         $('#nb_wings').text(wing_label);
-        filteredData = [];
-        allData.forEach((flight, i) => {
-          console.log(flight.wing+"///"+wing_label);
-          if (flight.wing == wing_label) {
-            filteredData.push(flight);
-          }
-        });
+        filteredData = applyFilters(allData, appliedFilters, filterStrings);
         redrawViz(filteredData);
-
+        $('.wing_item.active').not($(this)).removeClass('active');
+        $(this).toggleClass('active');
       });
 
+      $('.site_item').click(function() {
+        site_label = $(this).text();
+        if ($(this).attr("id") == 'site_0') {
+          appliedFilters[2] = 0; // wing/year/site
+          filterStrings[2] = '';
+        } else {
+          appliedFilters[2] = 1; // wing/year/site
+          filterStrings[2] = site_label;
+        }
+        $('#nb_sites').text(site_label);
+        filteredData = applyFilters(allData, appliedFilters, filterStrings);
+        redrawViz(filteredData);
+        var value = '';
+        $("#sitesFilter li.filterable").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+        $('#site_input').val('');
+      });
 
+      var myDropdown = document.getElementById('site_down')
+      myDropdown.addEventListener('shown.bs.dropdown', function() {
+        document.getElementById('site_input').focus();
+
+      })
+      myDropdown.addEventListener('hidden.bs.dropdown', function() {
+        var value = '';
+        $("#sitesFilter li.filterable").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+        $('#site_input').val('');
+
+      })
+      window.addEventListener("resize", function() {
+        redrawTable(filteredData);
+      });
     });
   </script>
 
