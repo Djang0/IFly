@@ -9,7 +9,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
   <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
+  <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
+
+  <script src="https://kit.fontawesome.com/2383fc25b0.js" crossorigin="anonymous"></script>
   <script src="util.js"></script>
   <script type="text/javascript">
     const allData = f71dbe52628a3f83a77ab494817525c6;
@@ -17,6 +19,7 @@
     const wings = [...new Set(allData.map(item => item.wing))].sort();
     const years = [...new Set(allData.map(item => item.year))].sort();
     const sites = [...new Set(allData.map(item => item.site))].sort();
+
     let appliedFilters = [0, 0, 0]; // wing/year/site
     let filterStrings = ['', '', ''];
   </script>
@@ -96,8 +99,8 @@
           <div class="card-body">
             <h5 class="card-title">{{{pilot.name}}}</h5>
             <h6 class="card-subtitle mb-4 text-muted">{{{pilot.location}}}</h6>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the bulk of the card's content.
+            <p class="card-text" id="userPad">
+              aa9f3975e1ac31d104905da5d2fa2d79
             </p>
 
           </div><!-- card-body -->
@@ -164,7 +167,7 @@
             <h5 class="card-title">All flights</h5>
             <p class="card-text">
               <!-- {{{flights.table}}} -->
-            <table id='flights_table' class='display nowrap' style="width:100%"></table>
+            <table id='flights_table' class='display nowrap compact' style="width:100%"></table>
             </p>
 
           </div><!-- card-body -->
@@ -287,9 +290,12 @@
         $('#site_input').val('');
 
       })
-      window.addEventListener("resize", function() {
-        redrawTable(filteredData);
-      });
+
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+      var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+      })
+
     });
   </script>
 

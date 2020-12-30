@@ -1,7 +1,23 @@
 {
-  "pilot":"Ludovic Reenaers",
-  "country":"Belgium",
-  "city":"Liège",
-  "logFly_file":"/Users/lreenaers/SynologyDrive/parapente/logfly/Logfly.db",
-  "build_path":"/Users/lreenaers/Documents/code/pilot_page/"
+  "pilot": "Ludovic Reenaers",
+  "country": "Belgium",
+  "city": "Liège",
+  "logFly_file": "/Users/lreenaers/SynologyDrive/parapente/logfly/Logfly.db",
+  "build_path": "/Users/lreenaers/Documents/code/pilot_page/",
+  "federation": "FBVL",
+  "pilot_id": "be-06957",
+  "licenses": [{
+      "license": "Pilote parapente",
+      "date": "28/05/19"
+    }, {
+      "license": "Pilote XC parapente",
+      "date": "28/05/19"
+    },
+    {
+      "license": "IPPI 5",
+      "date": "29/05/19"
+    }
+  ],
+  "clubs": ["Laroch'Ailes"]
+
 }

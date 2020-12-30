@@ -15,14 +15,15 @@ function redrawYearsFilter(years) {
 }
 
 function redrawSitesFilter(sites) {
-filterHTML = '<li><p class="text-center"><input type="text" class="form-control-sm" id="site_input" placeholder="Search" autofocus></p></li>'
+  filterHTML = '<li><p class="text-center"><input type="text" class="form-control-sm" id="site_input" placeholder="Search" autofocus></p></li>'
   filterHTML += '<li class="filterable"><a class="dropdown-item site_item" id="site_0" href="#"> - All sites - </a></li>'
   sites.forEach((site) => {
     filterHTML += '<li class="filterable"><a class="dropdown-item site_item" id="' + site.replace(" ", ".") + '" href="#">' + site + '</a></li>'
   });
   $("#sitesFilter").html(filterHTML);
 }
-function redrawTable(filteredData){
+
+function redrawTable(filteredData) {
 
   if ($.fn.dataTable.isDataTable('#flights_table')) {
     table = $('#flights_table').DataTable();
@@ -32,23 +33,35 @@ function redrawTable(filteredData){
 
     var table = $('#flights_table').DataTable({
       aaSorting: [
-        [0, 'desc']
+        [0, 'desc'],
+        [1, 'desc']
       ],
       data: filteredData,
       responsive: true,
       rowGroup: {
-            dataSrc: 2
-        },
+        dataSrc: 2
+      },
       columns: [{
           data: 'date',
           title: "Date"
+        }, {
+          data: 'time',
+          title: "time"
         },
         {
           data: 'site',
           title: "Site"
         },
         {
-          data: 'duration',
+          data: 'country',
+          title: "country"
+        },
+        {
+          data: 'altTo',
+          title: "Take-off alt."
+        },
+        {
+          data: 'durationHms',
           title: "Duration"
         }
       ]
@@ -56,6 +69,7 @@ function redrawTable(filteredData){
   }
 
 }
+
 function redrawViz(filteredData) {
   redrawTable(filteredData)
 
