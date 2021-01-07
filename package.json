@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.9.8",
+    "igc-analyzer": "0.0.1",
+    "igc-xc-score": "^1.5.1",
     "sqlite3": "^5.0.0"
   }
 }

@@ -1,4 +1,6 @@
 const fs = require('fs');
+const IGCAnalyzer = require('igc-analyzer');
+
 const sqlite3 = require('sqlite3').verbose();
 const config = JSON.parse(fs.readFileSync('config.json'));
 var template = fs.readFileSync('template.html').toString();
@@ -48,17 +50,21 @@ if (fs.existsSync(config.build_path)) {
 }
 
 buildUserPad = function(flights) {
+  pad = ""
   totalSeconds = 0;
   flightCount = 0;
   flightNoIGC = 0;
   flights.forEach((flight) => {
     totalSeconds += flight.duration;
     flightCount += 1;
-    if (flight.hasIGC) {
+    if (!flight.hasIGC) {
       flightNoIGC += 1;
     }
   })
-  pad = '<p><i class="fas fa-address-card" data-bs-toggle="tooltip" data-bs-placement="right" title="License (id/federation)"></i>&nbsp; ' + config.pilot_id + " (" + config.federation + ")</p>"
+
+  pad += '<p><i class="fas fa-address-card" data-bs-toggle="tooltip" data-bs-placement="right" title="License (id/federation)"></i>&nbsp; ' + config.pilot_id + " (" + config.federation + ")</p>"
+  pad += '<p class="fs-6 fw-lighter"><i class="far fa-clock" data-bs-toggle="tooltip" data-bs-placement="right" title="Total air time"></i>&nbsp;<small> ' + secToHms(totalSeconds) + '</small></p>'
+  pad += '<p class="fs-6 fw-lighter"><i class="fas fa-dove" data-bs-toggle="tooltip" data-bs-placement="right" title="Flights count"></i>&nbsp; <small>' + flightCount + ' flights (' + flightNoIGC + ' without IGC)</small></p>'
   config.licenses.forEach((license, i) => {
     pad += '<p class="fs-6 fw-lighter"><i class="fas fa-graduation-cap" data-bs-toggle="tooltip" data-bs-placement="right" title="License (date obtained)"></i>&nbsp;<small>' + license.license + " (" + license.date + ")</small></p>"
   });
@@ -95,6 +101,29 @@ processFlights = function(data) {
 
     flight.hasComment = (row.V_Commentaire != '' && row.V_Commentaire !== undefined && row.V_Commentaire !== null)
     flight.hasIGC = (row.V_IGC != '' && row.V_IGC !== undefined && row.V_IGC !== null)
+    if (flight.hasIGC) {
+      var analyzer = new IGCAnalyzer(row.V_IGC);
+      var analyzedData = analyzer.parse(true, true);
+      maxpress = 0
+      maxgps = 0
+      analyzedData.fixes.forEach((fix, i) => {
+        if (fix.pressalt > maxpress) {
+          maxpress = fix.pressalt
+        }
+        if (fix.gpsalt > maxgps) {
+          maxgps = fix.gpsalt
+        }
+      });
+      flight.analysed = {
+        "maxAltPressure": maxpress,
+        "maxAltGPS": maxgps
+      }
+    } else {
+      flight.analysed = {
+        "maxAltPressure": 0,
+        "maxAltGPS": 0
+      }
+    }
     flight.comments = row.V_Commentaire
     fdate = dayjs(flight.datetime, 'YYYY-MM-DD HH:mm:ss')
     year = fdate.year();
