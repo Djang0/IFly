@@ -1,12 +1,29 @@
 const fs = require('fs');
 const IGCAnalyzer = require('igc-analyzer');
-
 const sqlite3 = require('sqlite3').verbose();
 const config = JSON.parse(fs.readFileSync('config.json'));
 var template = fs.readFileSync('template.html').toString();
 var dayjs = require('dayjs');
 var duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
+
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180)
+}
+// https://en.wikipedia.org/wiki/Haversine_formula
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2 - lat1); // deg2rad below
+  var dLon = deg2rad(lon2 - lon1);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c; // Distance in km
+  return d;
+}
 
 
 function secToHms(seconds) {
@@ -93,6 +110,7 @@ processFlights = function(data) {
     flight.latTo = row.V_LatDeco
     flight.longTo = row.V_LongDeco
     flight.altTo = row.V_AltDeco
+
     if (row.V_Pays != '' && row.V_Pays !== undefined && row.V_Pays !== null) {
       flight.country = row.V_Pays
     } else {
@@ -102,11 +120,19 @@ processFlights = function(data) {
     flight.hasComment = (row.V_Commentaire != '' && row.V_Commentaire !== undefined && row.V_Commentaire !== null)
     flight.hasIGC = (row.V_IGC != '' && row.V_IGC !== undefined && row.V_IGC !== null)
     if (flight.hasIGC) {
+      console.log(row.V_ID);
       var analyzer = new IGCAnalyzer(row.V_IGC);
       var analyzedData = analyzer.parse(true, true);
+      lat_to = analyzedData.route.takeoff.lat
+      lng_to = analyzedData.route.takeoff.lng
+      max_dist_from_to = 0;
       maxpress = 0
       maxgps = 0
       analyzedData.fixes.forEach((fix, i) => {
+        dist_from_to = getDistanceFromLatLonInKm(lat_to, lng_to, fix.lat, fix.lng);
+        if (dist_from_to > max_dist_from_to) {
+          max_dist_from_to = dist_from_to;
+        }
         if (fix.pressalt > maxpress) {
           maxpress = fix.pressalt
         }
@@ -114,15 +140,19 @@ processFlights = function(data) {
           maxgps = fix.gpsalt
         }
       });
+
       flight.analysed = {
         "maxAltPressure": maxpress,
-        "maxAltGPS": maxgps
+        "maxAltGPS": maxgps,
+        "maxDistFromTo": max_dist_from_to
       }
     } else {
       flight.analysed = {
         "maxAltPressure": 0,
-        "maxAltGPS": 0
+        "maxAltGPS": 0,
+        "maxDistFromTo": 0
       }
+
     }
     flight.comments = row.V_Commentaire
     fdate = dayjs(flight.datetime, 'YYYY-MM-DD HH:mm:ss')

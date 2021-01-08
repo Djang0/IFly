@@ -88,6 +88,8 @@ function redrawBadges(filteredData) {
   noIgcSeconds = 0;
   flightCount = 0;
   flightNoIGC = 0;
+  max_dist_from_to = 0;
+  sum_dist_from_to = 0;
   maxGPS = 0;
   maxBaro = 0;
   filteredData.forEach((flight) => {
@@ -97,39 +99,54 @@ function redrawBadges(filteredData) {
       noIgcSeconds += flight.duration;
       flightNoIGC += 1;
     } else {
+      sum_dist_from_to += flight.analysed.maxDistFromTo
+      if (flight.analysed.maxDistFromTo > max_dist_from_to) {
+        max_dist_from_to = flight.analysed.maxDistFromTo;
+      }
       if (flight.analysed.maxAltPressure > maxBaro) {
         maxBaro = flight.analysed.maxAltPressure
       }
       if (flight.analysed.maxAltGPS > maxGPS) {
         maxGPS = flight.analysed.maxAltGPS
       }
+
     }
   });
-  if (flightNoIGC > 0) {
-    count = '<span class="fs-1">' + flightCount + ' </span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+  if (sum_dist_from_to > 0) {
+    if ((flightCount - flightNoIGC) > 0) {
+      avg_dist_from_to = sum_dist_from_to / (flightCount - flightNoIGC)
+    } else {
+      avg_dist_from_to = 0;
+    }
+
   } else {
-    count = '<span class="fs-1">' + flightCount + ' </span>'
-  }
-  duration = ""
-  if (flightNoIGC > 0) {
-    duration = '<span class="fs-1">' + secToHms(totalSeconds) + ' </span> <p class="fw-lighter"><small>(' + secToHms(noIgcSeconds) + ' w/o IGC)</small></p>'
-  } else {
-    duration = '<span class="fs-1">' + secToHms(totalSeconds) + ' </span>'
-  }
-  if (flightNoIGC > 0) {
-    alti_gps = '<span class="fs-1">' + maxGPS + ' </span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-  } else {
-    alti_gps = '<span class="fs-1">' + maxGPS + '</span>'
+    avg_dist_from_to = 0;
   }
   if (flightNoIGC > 0) {
+    alti_gps = '<span class="fs-1">' + maxGPS + ' m</span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
     alti_baro = '<span class="fs-1">' + maxBaro + ' m</span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    duration = '<span class="fs-1">' + secToHms(totalSeconds) + ' </span> <p class="fw-lighter"><small>(' + secToHms(noIgcSeconds) + ' w/o IGC)</small></p>'
+    count = '<span class="fs-1">' + flightCount + ' </span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_dist = '<span class="fs-1">' + max_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    avg_dist = '<span class="fs-1">' + avg_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_dist = '<span class="fs-1">' + sum_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
   } else {
     alti_baro = '<span class="fs-1">' + maxBaro + ' m</span>'
+    alti_gps = '<span class="fs-1">' + maxGPS + ' m</span>'
+    duration = '<span class="fs-1">' + secToHms(totalSeconds) + ' </span>'
+    count = '<span class="fs-1">' + flightCount + ' </span>'
+    max_dist = '<span class="fs-1">' + max_dist_from_to.toFixed(2) + ' Km</span>'
+    avg_dist = '<span class="fs-1">' + avg_dist_from_to.toFixed(2) + ' Km</span>'
+    sum_dist = '<span class="fs-1">' + sum_dist_from_to.toFixed(2) + ' Km</span>'
   }
   $('#count_badge').html(count);
   $('#air_badge').html(duration);
   $('#alti_GPS_badge').html(alti_gps);
   $('#alti_Baro_badge').html(alti_baro);
+  $('#max_dist').html(max_dist);
+  $('#avg_dist').html(avg_dist);
+  $('#sum_dist').html(sum_dist);
+
 }
 
 function redrawViz(filteredData) {

@@ -95,6 +95,7 @@
       <div class="col-sm-6 col-lg-2 mb-2">
 
         <div class="card">
+          <!-- pilot-ID -->
           <img src="pilot.png" class="card-img-top rounded-circle mx-auto d-block " style="width:60%" alt="...">
           <div class="card-body">
             <h5 class="card-title">{{{pilot.name}}}</h5>
@@ -107,6 +108,7 @@
         </div><!-- profil card -->
       </div>
       <div class="col-sm-6 col-lg-2 mb-4">
+        <!-- flight-count -->
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Flights count</h5>
@@ -118,6 +120,7 @@
         </div><!-- profil card -->
       </div>
       <div class="col-sm-6 col-lg-2 mb-4">
+        <!-- air time -->
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Air time</h5>
@@ -129,6 +132,7 @@
         </div><!-- profil card -->
       </div>
       <div class="col-sm-6 col-lg-2 mb-4">
+        <!-- speed max -->
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Speed max</h5>
@@ -140,6 +144,7 @@
         </div><!-- profil card -->
       </div>
       <div class="col-sm-6 col-lg-2 mb-4">
+        <!-- max alt gps -->
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Altitude max (GPS)</h5>
@@ -152,12 +157,76 @@
         </div><!-- profil card -->
       </div>
       <div class="col-sm-6 col-lg-2 mb-4">
+        <!-- max alt baro -->
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Altitude max (Baro)</h5>
-            
+
             <p class="card-text" id="alti_Baro_badge">
               Some quick example text to build on the card title and make up the bulk of the card's content.
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-6 col-lg-2 mb-4"><!-- with tab -->
+
+
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Distance from take-off</h5>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist" id="max_dist_tab">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="tot_dist-tab" data-bs-toggle="tab" href="#sum_dist" role="tab" aria-controls="Total" aria-selected="true">Total</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="max_dist-tab" data-bs-toggle="tab" href="#max_dist" role="tab" aria-controls="Max" aria-selected="true">Max.</a>
+              </li><li class="nav-item" role="presentation">
+                <a class="nav-link" id="avg_dist-tab" data-bs-toggle="tab" href="#avg_dist" role="tab" aria-controls="Avg" aria-selected="true">Avg.</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+
+            <div class="tab-content" id="max_dist_tab_content">
+              <div class="tab-pane fade show active" id="sum_dist" role="tabpanel" aria-labelledby="Total"></div>
+              <div class="tab-pane fade" id="max_dist" role="tabpanel" aria-labelledby="Max"></div>
+              <div class="tab-pane fade" id="avg_dist" role="tabpanel" aria-labelledby="Avg"></div>
+            </div>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-6 col-lg-2 mb-4"><!-- total dist -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Total dist. from take-off</h5>
+            <p class="card-text" >
+
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-6 col-lg-2 mb-4"><!-- total dist -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Max dist. from take-off</h5>
+            <p class="card-text" >
+
+
+            </p>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-6 col-lg-2 mb-4"><!-- total dist -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Avg dist. from take-off</h5>
+            <p class="card-text" >
+
+
             </p>
 
           </div><!-- card-body -->
@@ -166,21 +235,10 @@
       <div class="col-sm-6 col-lg-2 mb-4">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Distance max</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the bulk of the card's content.
-            </p>
-
-          </div><!-- card-body -->
-        </div><!-- profil card -->
-      </div>
-      <div class="col-sm-12 col-lg-8 mb-6">
-        <div class="card">
-          <div class="card-body">
             <h5 class="card-title">Total traces length</h5>
             <p class="card-text">
-              <!-- {{{flights.table}}} -->
-            <table id='flights_table' class='display nowrap compact' style="width:100%"></table>
+
+
             </p>
 
           </div><!-- card-body -->
@@ -198,7 +256,6 @@
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
-
       <div class="col-sm-6 col-lg-2 mb-4">
         <div class="card">
           <div class="card-body">
@@ -210,18 +267,17 @@
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
-
-      <div class="col-sm-6 col-lg-2 mb-4">
+      <div class="col-sm-12 col-lg-10 mb-10">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Title</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the bulk of the card's content.
-            </p>
+            <h5 class="card-title">Flights list</h5>
+            <table id='flights_table' class='display nowrap compact' style="width:100%"></table>
 
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
+
+
 
     </div><!-- row -->
 
