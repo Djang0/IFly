@@ -1,5 +1,10 @@
 const fs = require('fs');
 const IGCAnalyzer = require('igc-analyzer');
+const IGCParser = require('igc-parser');
+const {
+  scoring,
+  solver
+} = require('igc-xc-score');
 const sqlite3 = require('sqlite3').verbose();
 const config = JSON.parse(fs.readFileSync('config.json'));
 var template = fs.readFileSync('template.html').toString();
@@ -120,9 +125,23 @@ processFlights = function(data) {
     flight.hasComment = (row.V_Commentaire != '' && row.V_Commentaire !== undefined && row.V_Commentaire !== null)
     flight.hasIGC = (row.V_IGC != '' && row.V_IGC !== undefined && row.V_IGC !== null)
     if (flight.hasIGC) {
-      console.log(row.V_ID);
       var analyzer = new IGCAnalyzer(row.V_IGC);
       var analyzedData = analyzer.parse(true, true);
+
+      console.log('before');
+      var score_flight = IGCParser.parse(row.V_IGC, {
+        lenient: true
+      });
+
+      console.log('parsed');
+
+      var result_ffvl = solver(score_flight, scoring.FFVL).next().value;
+
+      console.log('r1');
+
+      var result_xcontest = solver(score_flight, scoring.XContest).next().value;
+
+      console.log('r2');
       lat_to = analyzedData.route.takeoff.lat
       lng_to = analyzedData.route.takeoff.lng
       max_dist_from_to = 0;
@@ -211,7 +230,7 @@ const db = new sqlite3.Database(config.logFly_file, sqlite3.OPEN_READONLY, (err)
 });
 
 db.serialize(() => {
-  db.all(`SELECT * FROM Vol order by V_Date DESC`, (err, rows) => {
+  db.all(`SELECT * FROM Vol order by V_Date ASC`, (err, rows) => {
     if (err) {
       console.error(err.message);
     }
