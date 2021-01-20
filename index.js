@@ -1,10 +1,11 @@
 const fs = require('fs');
-const IGCAnalyzer = require('igc-analyzer');
+const IGCAnalyzer = require('./my-igc-analyzer');
 const IGCParser = require('igc-parser');
 const {
   scoring,
   solver
 } = require('igc-xc-score');
+const cliProgress = require('cli-progress');
 const sqlite3 = require('sqlite3').verbose();
 const config = JSON.parse(fs.readFileSync('config.json'));
 var template = fs.readFileSync('template.html').toString();
@@ -98,13 +99,15 @@ buildUserPad = function(flights) {
   return pad;
 }
 processFlights = function(data) {
-
+  const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+  bar1.start(data.length, 0);
   flights = [];
   wings = [];
   sites = [];
   seasons = [];
   years = [];
-  data.forEach((row) => {
+  data.forEach((row, ii) => {
+    bar1.update(ii);
     flight = {};
     flight.id = row.V_ID
     flight.datetime = row.V_Date
@@ -128,20 +131,20 @@ processFlights = function(data) {
       var analyzer = new IGCAnalyzer(row.V_IGC);
       var analyzedData = analyzer.parse(true, true);
 
-      console.log('before');
+
       var score_flight = IGCParser.parse(row.V_IGC, {
         lenient: true
       });
 
-      console.log('parsed');
+
 
       var result_ffvl = solver(score_flight, scoring.FFVL).next().value;
 
-      console.log('r1');
+
 
       var result_xcontest = solver(score_flight, scoring.XContest).next().value;
 
-      console.log('r2');
+
       lat_to = analyzedData.route.takeoff.lat
       lng_to = analyzedData.route.takeoff.lng
       max_dist_from_to = 0;
@@ -206,6 +209,7 @@ processFlights = function(data) {
     flights.push(flight);
 
   });
+  bar1.stop();
   location = getLocation(config.country, config.city);
 
   years.sort(function(a, b) {
