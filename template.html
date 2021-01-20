@@ -96,6 +96,7 @@
 
         <div class="card">
           <!-- pilot-ID -->
+          <br/>
           <img src="pilot.png" class="card-img-top rounded-circle mx-auto d-block " style="width:60%" alt="...">
           <div class="card-body">
             <h5 class="card-title">{{{pilot.name}}}</h5>
@@ -170,8 +171,6 @@
         </div><!-- profil card -->
       </div>
       <div class="col-sm-6 col-lg-2 mb-4"><!-- with tab -->
-
-
         <div class="card">
           <div class="card-header">
             <h5 class="card-title">Distance from take-off</h5>
@@ -197,41 +196,114 @@
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
-      <div class="col-sm-6 col-lg-2 mb-4"><!-- total dist -->
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Total dist. from take-off</h5>
-            <p class="card-text" >
 
-            </p>
+      <div class="col-sm-6 col-lg-2 mb-4"><!-- with tab -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">FFVL Scoring</h5>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist" id="ffvl_score_tab">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="tot_fs-tab" data-bs-toggle="tab" href="#sum_ffvl_score" role="tab" aria-controls="Total" aria-selected="true">Total</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="max_fs-tab" data-bs-toggle="tab" href="#max_ffvl_score" role="tab" aria-controls="Max" aria-selected="true">Max.</a>
+              </li><li class="nav-item" role="presentation">
+                <a class="nav-link" id="avg_fs-tab" data-bs-toggle="tab" href="#avg_ffvl_score" role="tab" aria-controls="Avg" aria-selected="true">Avg.</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+
+            <div class="tab-content" id="ffvl_score_tab_content">
+              <div class="tab-pane fade show active" id="sum_ffvl_score" role="tabpanel" aria-labelledby="Total"></div>
+              <div class="tab-pane fade" id="max_ffvl_score" role="tabpanel" aria-labelledby="Max"></div>
+              <div class="tab-pane fade" id="avg_ffvl_score" role="tabpanel" aria-labelledby="Avg"></div>
+            </div>
 
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
-      <div class="col-sm-6 col-lg-2 mb-4"><!-- total dist -->
+
+      <div class="col-sm-6 col-lg-2 mb-4"><!-- with tab -->
         <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">FFVL distance</h5>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist" id="ffvl_dist_tab">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="tot_fd-tab" data-bs-toggle="tab" href="#sum_ffvl_dist" role="tab" aria-controls="Total" aria-selected="true">Total</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="max_fd-tab" data-bs-toggle="tab" href="#max_ffvl_dist" role="tab" aria-controls="Max" aria-selected="true">Max.</a>
+              </li><li class="nav-item" role="presentation">
+                <a class="nav-link" id="avg_fd-tab" data-bs-toggle="tab" href="#avg_ffvl_dist" role="tab" aria-controls="Avg" aria-selected="true">Avg.</a>
+              </li>
+            </ul>
+          </div>
           <div class="card-body">
-            <h5 class="card-title">Max dist. from take-off</h5>
-            <p class="card-text" >
 
-
-            </p>
+            <div class="tab-content" id="ffvl_dist_tab_content">
+              <div class="tab-pane fade show active" id="sum_ffvl_dist" role="tabpanel" aria-labelledby="Total"></div>
+              <div class="tab-pane fade" id="max_ffvl_dist" role="tabpanel" aria-labelledby="Max"></div>
+              <div class="tab-pane fade" id="avg_ffvl_dist" role="tabpanel" aria-labelledby="Avg"></div>
+            </div>
 
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
-      <div class="col-sm-6 col-lg-2 mb-4"><!-- total dist -->
+      <div class="col-sm-6 col-lg-2 mb-4"><!-- with tab -->
         <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">XContest scoring</h5>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist" id="xc_score_tab">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="tot_xs-tab" data-bs-toggle="tab" href="#sum_xc_score" role="tab" aria-controls="Total" aria-selected="true">Total</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="max_xs-tab" data-bs-toggle="tab" href="#max_xc_score" role="tab" aria-controls="Max" aria-selected="true">Max.</a>
+              </li><li class="nav-item" role="presentation">
+                <a class="nav-link" id="avg_xs-tab" data-bs-toggle="tab" href="#avg_xc_score" role="tab" aria-controls="Avg" aria-selected="true">Avg.</a>
+              </li>
+            </ul>
+          </div>
           <div class="card-body">
-            <h5 class="card-title">Avg dist. from take-off</h5>
-            <p class="card-text" >
 
-
-            </p>
+            <div class="tab-content" id="xc_score_tab_content">
+              <div class="tab-pane fade show active" id="sum_xc_score" role="tabpanel" aria-labelledby="Total"></div>
+              <div class="tab-pane fade" id="max_xc_score" role="tabpanel" aria-labelledby="Max"></div>
+              <div class="tab-pane fade" id="avg_xc_score" role="tabpanel" aria-labelledby="Avg"></div>
+            </div>
 
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
+
+      <div class="col-sm-6 col-lg-2 mb-4"><!-- with tab -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">XContest distance</h5>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist" id="xc_dist_tab">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="tot_xd-tab" data-bs-toggle="tab" href="#sum_xc_dist" role="tab" aria-controls="Total" aria-selected="true">Total</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="max_xd-tab" data-bs-toggle="tab" href="#max_xc_dist" role="tab" aria-controls="Max" aria-selected="true">Max.</a>
+              </li><li class="nav-item" role="presentation">
+                <a class="nav-link" id="avg_xd-tab" data-bs-toggle="tab" href="#avg_xc_dist" role="tab" aria-controls="Avg" aria-selected="true">Avg.</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+
+            <div class="tab-content" id="xc_dist_tab_content">
+              <div class="tab-pane fade show active" id="sum_xc_dist" role="tabpanel" aria-labelledby="Total"></div>
+              <div class="tab-pane fade" id="max_xc_dist" role="tabpanel" aria-labelledby="Max"></div>
+              <div class="tab-pane fade" id="avg_xc_dist" role="tabpanel" aria-labelledby="Avg"></div>
+            </div>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+
       <div class="col-sm-6 col-lg-2 mb-4">
         <div class="card">
           <div class="card-body">

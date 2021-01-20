@@ -99,6 +99,7 @@ buildUserPad = function(flights) {
   return pad;
 }
 processFlights = function(data) {
+  console.log("found " + data.length + " flights in LogFly. Now processing...");
   const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
   bar1.start(data.length, 0);
   flights = [];
@@ -130,20 +131,16 @@ processFlights = function(data) {
     if (flight.hasIGC) {
       var analyzer = new IGCAnalyzer(row.V_IGC);
       var analyzedData = analyzer.parse(true, true);
-
-
       var score_flight = IGCParser.parse(row.V_IGC, {
         lenient: true
       });
-
-
-
       var result_ffvl = solver(score_flight, scoring.FFVL).next().value;
-
-
-
       var result_xcontest = solver(score_flight, scoring.XContest).next().value;
 
+      ffvl_dist = result_ffvl.scoreInfo.distance
+      ffvl_score = result_ffvl.score
+      xcontest_dist = result_xcontest.scoreInfo.distance
+      xcontest_score = result_xcontest.score
 
       lat_to = analyzedData.route.takeoff.lat
       lng_to = analyzedData.route.takeoff.lng
@@ -166,13 +163,22 @@ processFlights = function(data) {
       flight.analysed = {
         "maxAltPressure": maxpress,
         "maxAltGPS": maxgps,
-        "maxDistFromTo": max_dist_from_to
+        "maxDistFromTo": max_dist_from_to,
+
+        "xcontest_score": xcontest_score,
+        "xcontest_dist": xcontest_dist,
+        "ffvl_score": ffvl_score,
+        "ffvl_dist": ffvl_dist
       }
     } else {
       flight.analysed = {
         "maxAltPressure": 0,
         "maxAltGPS": 0,
-        "maxDistFromTo": 0
+        "maxDistFromTo": 0,
+        "xcontest_score": 0,
+        "xcontest_dist": 0,
+        "ffvl_score": 0,
+        "ffvl_dist": 0
       }
 
     }
@@ -210,6 +216,8 @@ processFlights = function(data) {
 
   });
   bar1.stop();
+
+  console.log("Generating pilot's page.");
   location = getLocation(config.country, config.city);
 
   years.sort(function(a, b) {

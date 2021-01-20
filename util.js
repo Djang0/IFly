@@ -83,6 +83,21 @@ function redrawTable(filteredData) {
 
 }
 
+function avgData(summed, count, noIgc) {
+  avg = 0;
+  if (summed > 0) {
+    if ((count - noIgc) > 0) {
+      avg = summed / (count - noIgc)
+    } else {
+      avg = 0;
+    }
+
+  } else {
+    avg = 0;
+  }
+  return avg;
+}
+
 function redrawBadges(filteredData) {
   totalSeconds = 0;
   noIgcSeconds = 0;
@@ -92,6 +107,23 @@ function redrawBadges(filteredData) {
   sum_dist_from_to = 0;
   maxGPS = 0;
   maxBaro = 0;
+
+  ffvl_max_score = 0;
+  ffvl_total_score = 0;
+  ffvl_avg_score = 0;
+
+  ffvl_max_dist = 0;
+  ffvl_total_dist = 0;
+  ffvl_avg_dist = 0;
+
+  xc_max_score = 0;
+  xc_total_score = 0;
+  xc_avg_score = 0;
+
+  xc_max_dist = 0;
+  xc_total_dist = 0;
+  xc_avg_dist = 0;
+
   filteredData.forEach((flight) => {
     totalSeconds += flight.duration;
     flightCount += 1;
@@ -99,7 +131,7 @@ function redrawBadges(filteredData) {
       noIgcSeconds += flight.duration;
       flightNoIGC += 1;
     } else {
-      sum_dist_from_to += flight.analysed.maxDistFromTo
+
       if (flight.analysed.maxDistFromTo > max_dist_from_to) {
         max_dist_from_to = flight.analysed.maxDistFromTo;
       }
@@ -110,39 +142,107 @@ function redrawBadges(filteredData) {
         maxGPS = flight.analysed.maxAltGPS
       }
 
+      if (flight.analysed.xcontest_score > xc_max_score) {
+        xc_max_score = flight.analysed.xcontest_score
+      }
+      if (flight.analysed.xcontest_dist > xc_max_dist) {
+        xc_max_dist = flight.analysed.xcontest_dist
+      }
+      if (flight.analysed.ffvl_score > ffvl_max_score) {
+        ffvl_max_score = flight.analysed.ffvl_score
+      }
+      if (flight.analysed.ffvl_dist > ffvl_max_dist) {
+        ffvl_max_dist = flight.analysed.ffvl_dist
+      }
+      sum_dist_from_to += flight.analysed.maxDistFromTo
+      xc_total_score += flight.analysed.xcontest_score
+      xc_total_dist += flight.analysed.xcontest_dist
+      ffvl_total_score += flight.analysed.ffvl_score
+      ffvl_total_dist += flight.analysed.ffvl_dist
     }
   });
-  if (sum_dist_from_to > 0) {
-    if ((flightCount - flightNoIGC) > 0) {
-      avg_dist_from_to = sum_dist_from_to / (flightCount - flightNoIGC)
-    } else {
-      avg_dist_from_to = 0;
-    }
 
-  } else {
-    avg_dist_from_to = 0;
-  }
+  avg_dist_from_to = avgData(sum_dist_from_to, flightCount, flightNoIGC)
+  xc_avg_score = avgData(xc_total_score, flightCount, flightNoIGC)
+  xc_avg_dist = avgData(xc_total_dist, flightCount, flightNoIGC)
+  ffvl_avg_score = avgData(ffvl_total_score, flightCount, flightNoIGC)
+  ffvl_avg_dist = avgData(ffvl_total_dist, flightCount, flightNoIGC)
+
+
   if (flightNoIGC > 0) {
+
+    avg_xc_dist = '<span class="fs-1">' + xc_avg_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_xc_dist = '<span class="fs-1">' + xc_max_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_xc_dist = '<span class="fs-1">' + xc_total_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
+    avg_xc_score = '<span class="fs-1">' + xc_avg_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_xc_score = '<span class="fs-1">' + xc_max_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_xc_score = '<span class="fs-1">' + xc_total_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
+    avg_ffvl_dist = '<span class="fs-1">' + ffvl_avg_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_ffvl_dist = '<span class="fs-1">' + ffvl_max_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_ffvl_dist = '<span class="fs-1">' + ffvl_total_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
+    avg_ffvl_score = '<span class="fs-1">' + ffvl_avg_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_ffvl_score = '<span class="fs-1">' + ffvl_max_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_ffvl_score = '<span class="fs-1">' + ffvl_total_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
     alti_gps = '<span class="fs-1">' + maxGPS + ' m</span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
     alti_baro = '<span class="fs-1">' + maxBaro + ' m</span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
     duration = '<span class="fs-1">' + secToHms(totalSeconds) + ' </span> <p class="fw-lighter"><small>(' + secToHms(noIgcSeconds) + ' w/o IGC)</small></p>'
     count = '<span class="fs-1">' + flightCount + ' </span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
     max_dist = '<span class="fs-1">' + max_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
     avg_dist = '<span class="fs-1">' + avg_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
     sum_dist = '<span class="fs-1">' + sum_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
   } else {
+    avg_xc_dist = '<span class="fs-1">' + xc_avg_dist.toFixed(2) + ' Km</span>'
+    max_xc_dist = '<span class="fs-1">' + xc_max_dist.toFixed(2) + ' Km</span>'
+    sum_xc_dist = '<span class="fs-1">' + xc_total_dist.toFixed(2) + ' Km</span>'
+
+    avg_xc_score = '<span class="fs-1">' + xc_avg_score.toFixed(2) + ' Pts.</span>'
+    max_xc_score = '<span class="fs-1">' + xc_max_score.toFixed(2) + ' Pts.</span>'
+    sum_xc_score = '<span class="fs-1">' + xc_total_score.toFixed(2) + ' Pts.</span>'
+
+    avg_ffvl_dist = '<span class="fs-1">' + ffvl_avg_dist.toFixed(2) + ' Km</span>'
+    max_ffvl_dist = '<span class="fs-1">' + ffvl_max_dist.toFixed(2) + ' Km</span>'
+    sum_ffvl_dist = '<span class="fs-1">' + ffvl_total_dist.toFixed(2) + ' Km</span>'
+
+    avg_ffvl_score = '<span class="fs-1">' + ffvl_avg_score.toFixed(2) + ' Pts.</span>'
+    max_ffvl_score = '<span class="fs-1">' + ffvl_max_score.toFixed(2) + ' Pts.</span>'
+    sum_ffvl_score = '<span class="fs-1">' + ffvl_total_score.toFixed(2) + ' Pts.</span>'
+
     alti_baro = '<span class="fs-1">' + maxBaro + ' m</span>'
     alti_gps = '<span class="fs-1">' + maxGPS + ' m</span>'
     duration = '<span class="fs-1">' + secToHms(totalSeconds) + ' </span>'
     count = '<span class="fs-1">' + flightCount + ' </span>'
+
     max_dist = '<span class="fs-1">' + max_dist_from_to.toFixed(2) + ' Km</span>'
     avg_dist = '<span class="fs-1">' + avg_dist_from_to.toFixed(2) + ' Km</span>'
     sum_dist = '<span class="fs-1">' + sum_dist_from_to.toFixed(2) + ' Km</span>'
   }
+
+  $('#sum_ffvl_score').html(sum_ffvl_score);
+  $('#max_ffvl_score').html(max_ffvl_score);
+  $('#avg_ffvl_score').html(avg_ffvl_score);
+
+  $('#sum_ffvl_dist').html(sum_ffvl_dist);
+  $('#max_ffvl_dist').html(max_ffvl_dist);
+  $('#avg_ffvl_dist').html(avg_ffvl_dist);
+
+  $('#sum_xc_score').html(sum_xc_score);
+  $('#max_xc_score').html(max_xc_score);
+  $('#avg_xc_score').html(avg_xc_score);
+
+  $('#avg_xc_dist').html(avg_xc_dist);
+  $('#max_xc_dist').html(max_xc_dist);
+  $('#sum_xc_dist').html(sum_xc_dist);
+
   $('#count_badge').html(count);
   $('#air_badge').html(duration);
   $('#alti_GPS_badge').html(alti_gps);
   $('#alti_Baro_badge').html(alti_baro);
+
   $('#max_dist').html(max_dist);
   $('#avg_dist').html(avg_dist);
   $('#sum_dist').html(sum_dist);
