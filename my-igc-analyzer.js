@@ -33,20 +33,20 @@ class IGCAnalyzer {
 
     this.lines = []; // all lines in the igc file
     this.fixes = []; // all gps fixes
-    this.metadata = []; // all the metadata found
+    this.metadata = {}; // all the metadata found
     this.fixadditions = []; // all additional data to be found in a fix
 
     this.lastfix = []; // Last fix used to calculate new fix values
     this.minStepDuration = 1; // In seconds, duration between saved fixes
 
     this.thermals = []; // All major thermals, with metadata
-    this.currentThermal = []; // Data of the current thermal
+    this.currentThermal = {}; // Data of the current thermal
 
     this.upwinds = []; // All major upwind (soaring) areas
-    this.currentUpwind = []; // Current upwind area
+    this.currentUpwind = {}; // Current upwind area
 
     this.sinks = []; // All major sink areas, with metadata
-    this.currentSink = []; // Data of the current sink area
+    this.currentSink = {}; // Data of the current sink area
 
     this.windspeeds = []; // All windspeeds (taken from thermals)
 
@@ -301,12 +301,16 @@ class IGCAnalyzer {
               this.currentThermal.distance = this.distance(this.currentThermal.start.lat, this.currentThermal.start.lng, this.currentThermal.end.lat, this.currentThermal.end.lng, "K") * 1000;
               this.currentThermal.bearing = this.bearing(this.currentThermal.start.lat, this.currentThermal.start.lng, this.currentThermal.end.lat, this.currentThermal.end.lng);
 
-              this.thermals.push(this.currentThermal);
+              if (this.currentThermal !== null) {
+
+                this.thermals.push(this.currentThermal);
+              }
+
             }
 
           }
 
-          this.currentThermal = [];
+          this.currentThermal = {};
 
         }
 
@@ -341,14 +345,17 @@ class IGCAnalyzer {
               this.currentUpwind.climbrate = this.currentUpwind.heightgain / this.currentUpwind.duration;
               this.currentUpwind.distance = this.distance(this.currentUpwind.start.lat, this.currentUpwind.start.lng, this.currentUpwind.end.lat, this.currentUpwind.end.lng, "K") * 1000;
               this.currentUpwindbearing = this.bearing(this.currentUpwind.start.lat, this.currentUpwind.start.lng, this.currentUpwind.end.lat, this.currentUpwind.end.lng);
+              if (this.currentUpwind !== null) {
 
-              this.upwinds.push(this.currentUpwind);
+                this.upwinds.push(this.currentUpwind);
+              }
+
 
             }
 
           }
 
-          this.currentUpwind = [];
+          this.currentUpwind = {};
 
         }
 
@@ -384,13 +391,16 @@ class IGCAnalyzer {
               this.currentSink.distance = this.distance(this.currentSink.start.lat, this.currentSink.start.lng, this.currentSink.end.lat, this.currentSink.end.lng, "K") * 1000;
               this.currentSink.bearing = this.bearing(this.currentSink.start.lat, this.currentSink.start.lng, this.currentSink.end.lat, this.currentSink.end.lng);
 
-              this.sinks.push(this.currentSink);
+              if (this.currentSink !== null) {
+                this.sinks.push(this.currentSink);
+              }
+
 
             }
 
           }
 
-          this.currentSink = [];
+          this.currentSink = {};
 
         }
 
@@ -423,7 +433,7 @@ class IGCAnalyzer {
       for (let k in this.thermals) {
         let v = this.thermals[k];
         if (typeof v.merged !== 'undefined') {
-          delete(this.thermals[k]);
+          this.thermals.splice(k, 1);
         }
       }
 
@@ -454,7 +464,7 @@ class IGCAnalyzer {
       for (let k in this.upwinds) {
         let v = this.upwinds[k];
         if (typeof v.merged !== 'undefined') {
-          delete(this.upwinds[k]);
+          this.upwinds.splice(k, 1);
         }
       }
 
@@ -485,12 +495,12 @@ class IGCAnalyzer {
       for (let k in this.sinks) {
         let v = this.sinks[k];
         if (typeof v.merged !== 'undefined') {
-          delete(this.sinks[k]);
+          this.sinks.splice(k, 1);
         }
       }
 
       // Calculate thermal stats:
-
+      this.track.thermals = {};
       this.track.thermals.cnt = this.thermals.length;
 
       if (this.track.thermals.cnt > 0) {
@@ -565,7 +575,7 @@ class IGCAnalyzer {
       }
 
       // Calculate upwind stats:
-
+      this.track.upwinds = {};
       this.track.upwinds.cnt = this.upwinds.length;
 
       if (this.track.upwinds.cnt > 0) {
@@ -631,7 +641,7 @@ class IGCAnalyzer {
       }
 
       // Calculate sink stats:
-
+      this.track.sinks = {};
       this.track.sinks.cnt = this.sinks.length;
 
       if (this.track.sinks.cnt > 0) {
@@ -739,7 +749,7 @@ class IGCAnalyzer {
         }
 
       }
-
+      this.track.windspeeds = {};
       if (wspeeds.length > 0) {
         this.track.windspeeds['min-speed'] = ss.min(wspeeds);
         this.track.windspeeds['max-speed'] = ss.max(wspeeds);
@@ -763,7 +773,7 @@ class IGCAnalyzer {
         }
 
       }
-
+      this.track.bases = {};
       if (basealtitudes.length > 0) {
         this.track.bases['min-altitude'] = ss.min(basealtitudes);
         this.track.bases['max-altitude'] = ss.max(basealtitudes);
@@ -785,7 +795,7 @@ class IGCAnalyzer {
 
       let lost = 0;
       if (typeof this.track.sinks['sum-heightlost'] !== 'undefined') lost = this.track.sinks['sum-heightlost'];
-
+      this.track.general = {};
       if (lost > 0) {
         this.track.general['gain-vs-lost'] = (tgain + ugain) / lost;
       } else {
@@ -810,7 +820,8 @@ class IGCAnalyzer {
       }
 
     }
-
+    //console.log(JSON.stringify(this.track.thermals, null, 4));
+    //console.log(this.track.thermals);
     return {
       'metadata': this.metadata,
       'track': this.track,
