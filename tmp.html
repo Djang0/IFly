@@ -1,51 +1,42 @@
 <div class="col-sm-6 col-lg-2 mb-4"><!-- with tab -->
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">XContest scoring</h5>
-      <ul class="nav nav-tabs card-header-tabs" role="tablist" id="xc_score_tab">
+      <h5 class="card-title">Speed</h5>
+      <ul class="nav nav-tabs card-header-tabs" role="tablist" id="speed_tab">
         <li class="nav-item" role="presentation">
-          <a class="nav-link active" id="tot_xs-tab" data-bs-toggle="tab" href="#sum_xc_score" role="tab" aria-controls="Total" aria-selected="true">Total</a>
+          <a class="nav-link active" id="oa_speed-tab" data-bs-toggle="tab" href="#oa_speed" role="tab" aria-controls="Overall" aria-selected="true">Overall</a>
         </li>
         <li class="nav-item" role="presentation">
-          <a class="nav-link" id="max_xs-tab" data-bs-toggle="tab" href="#max_xc_score" role="tab" aria-controls="Max" aria-selected="true">Max.</a>
+          <a class="nav-link" id="gl_speed-tab" data-bs-toggle="tab" href="#gl_speed" role="tab" aria-controls="Gliding" aria-selected="true">Gliding</a>
         </li><li class="nav-item" role="presentation">
-          <a class="nav-link" id="avg_xs-tab" data-bs-toggle="tab" href="#avg_xc_score" role="tab" aria-controls="Avg" aria-selected="true">Avg.</a>
+          <a class="nav-link" id="th_speed-tab" data-bs-toggle="tab" href="#th_speed" role="tab" aria-controls="Thermaling" aria-selected="true">Thermaling</a>
         </li>
       </ul>
     </div>
     <div class="card-body">
 
-      <div class="tab-content" id="xc_score_tab_content">
-        <div class="tab-pane fade show active" id="sum_xc_score" role="tabpanel" aria-labelledby="Total"></div>
-        <div class="tab-pane fade" id="max_xc_score" role="tabpanel" aria-labelledby="Max"></div>
-        <div class="tab-pane fade" id="avg_xc_score" role="tabpanel" aria-labelledby="Avg"></div>
-      </div>
+      <div class="tab-content" id="speed_tab_content">
 
-    </div><!-- card-body -->
-  </div><!-- profil card -->
-</div>
+        <ul class="nav nav-tabs card-header-tabs" role="tablist" id="speed_tab">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="max_oa_speed-tab" data-bs-toggle="tab" href="#max_oa_speed" role="tab" aria-controls="Maximum" aria-selected="true">Maximum</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="avg_oa_speed-tab" data-bs-toggle="tab" href="#avg_oa_speed" role="tab" aria-controls="Average" aria-selected="true">Average</a>
+          </li>
+        </ul>
 
-<div class="col-sm-6 col-lg-2 mb-4"><!-- with tab -->
-  <div class="card">
-    <div class="card-header">
-      <h5 class="card-title">XContest distance</h5>
-      <ul class="nav nav-tabs card-header-tabs" role="tablist" id="xc_dist_tab">
-        <li class="nav-item" role="presentation">
-          <a class="nav-link active" id="tot_xd-tab" data-bs-toggle="tab" href="#sum_xc_dist" role="tab" aria-controls="Total" aria-selected="true">Total</a>
-        </li>
-        <li class="nav-item" role="presentation">
-          <a class="nav-link" id="max_xd-tab" data-bs-toggle="tab" href="#max_xc_dist" role="tab" aria-controls="Max" aria-selected="true">Max.</a>
-        </li><li class="nav-item" role="presentation">
-          <a class="nav-link" id="avg_xd-tab" data-bs-toggle="tab" href="#avg_xc_dist" role="tab" aria-controls="Avg" aria-selected="true">Avg.</a>
-        </li>
-      </ul>
-    </div>
-    <div class="card-body">
+        <div class="tab-pane fade show active" id="oa_speed" role="tabpanel" aria-labelledby="Overall">
 
-      <div class="tab-content" id="xc_dist_tab_content">
-        <div class="tab-pane fade show active" id="sum_xc_dist" role="tabpanel" aria-labelledby="Total"></div>
-        <div class="tab-pane fade" id="max_xc_dist" role="tabpanel" aria-labelledby="Max"></div>
-        <div class="tab-pane fade" id="avg_xc_dist" role="tabpanel" aria-labelledby="Avg"></div>
+          <div class="tab-content" id="oa_speed_tab_content">
+            <div class="tab-pane fade show active" id="max_oa_speed" role="tabpanel" aria-labelledby="Max">  </div>
+            <div class="tab-pane fade" id="avg_oa_speed" role="tabpanel" aria-labelledby="Average"></div>
+
+          </div>
+
+        </div>
+        <div class="tab-pane fade" id="gl_speed" role="tabpanel" aria-labelledby="Gliding"></div>
+        <div class="tab-pane fade" id="th_speed" role="tabpanel" aria-labelledby="Thermalling"></div>
       </div>
 
     </div><!-- card-body -->

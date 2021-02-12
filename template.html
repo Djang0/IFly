@@ -28,6 +28,19 @@
   <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.dataTables.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/rowgroup/1.1.2/css/rowGroup.dataTables.min.css" rel="stylesheet">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=9c2646307b6841b858e16446a494f05a"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', '9c2646307b6841b858e16446a494f05a');
+  </script>
   <title>{{{pilot.name}}}'s pilot page</title>
 </head>
 
@@ -132,18 +145,21 @@
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
+
       <div class="col-sm-6 col-lg-2 mb-4">
-        <!-- speed max -->
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Speed max</h5>
-            <p class="card-text" id="speed_badge">
-              Some quick example text to build on the card title and make up the bulk of the card's content.
+            <h5 class="card-title">Total traces length</h5>
+            <p class="card-text">
+
+
             </p>
 
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
+
+
       <div class="col-sm-6 col-lg-2 mb-4">
         <!-- max alt gps -->
         <div class="card">
@@ -304,18 +320,7 @@
         </div><!-- profil card -->
       </div>
 
-      <div class="col-sm-6 col-lg-2 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Total traces length</h5>
-            <p class="card-text">
 
-
-            </p>
-
-          </div><!-- card-body -->
-        </div><!-- profil card -->
-      </div>
 
       <div class="col-sm-6 col-lg-2 mb-4">
         <div class="card">
@@ -339,7 +344,51 @@
           </div><!-- card-body -->
         </div><!-- profil card -->
       </div>
-      <div class="col-sm-12 col-lg-10 mb-10">
+      <div class="col-sm-6 col-lg-3 mb-6"><!-- with tab -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Speed</h5>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist" id="speed_tab">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="oa_speed-tab" data-bs-toggle="tab" href="#oa_speed" role="tab" aria-controls="Overall" aria-selected="true">Overall</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="gl_speed-tab" data-bs-toggle="tab" href="#gl_speed" role="tab" aria-controls="Gliding" aria-selected="true">Gliding</a>
+              </li><li class="nav-item" role="presentation">
+                <a class="nav-link" id="th_speed-tab" data-bs-toggle="tab" href="#th_speed" role="tab" aria-controls="Thermaling" aria-selected="true">Thermaling</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+
+            <div class="tab-content" id="speed_tab_content">
+
+
+
+              <div class="tab-pane fade show active" id="oa_speed" role="tabpanel" aria-labelledby="Overall">
+                <ul class="nav nav-tabs card-header-tabs" role="tablist" id="_oa_speed_tab">
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="max_oa_speed-tab" data-bs-toggle="tab" href="#max_oa_speed" role="tab" aria-controls="Maximum" aria-selected="true">Maximum</a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="avg_oa_speed-tab" data-bs-toggle="tab" href="#avg_oa_speed" role="tab" aria-controls="Average" aria-selected="true">Average</a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="oa_speed_tab_content">
+                  <div class="tab-pane fade show active" id="max_oa_speed" role="tabpanel" aria-labelledby="Max"> max </div>
+                  <div class="tab-pane fade" id="avg_oa_speed" role="tabpanel" aria-labelledby="Average">avg</div>
+
+                </div>
+
+              </div>
+              <div class="tab-pane fade" id="gl_speed" role="tabpanel" aria-labelledby="Gliding"></div>
+              <div class="tab-pane fade" id="th_speed" role="tabpanel" aria-labelledby="Thermalling"></div>
+            </div>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-12 col-lg-12 mb-12">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Flights list</h5>

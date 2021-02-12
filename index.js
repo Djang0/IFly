@@ -145,9 +145,43 @@ processFlights = function(data) {
       lat_to = analyzedData.route.takeoff.lat
       lng_to = analyzedData.route.takeoff.lng
       max_dist_from_to = 0;
-      maxpress = 0
-      maxgps = 0
+      maxpress = 0;
+      maxgps = 0;
+      avg_instant_speed = 0;
+      total_speed = 0;
+      speed_count = 0;
+      total_speed_integ = 0;
+      speed_count_integ = 0;
+      max_integ_speed = 0
+      integ_speed_list = []
+      speed_integration = 20 //(sec)
+      started = false;
+      duration = 0
+      prev_stamp = analyzedData.fixes[0].time.t //(sec)
       analyzedData.fixes.forEach((fix, i) => {
+        if (!started && fix.speed > 0) {
+          started = true;
+        }
+        if (started) {
+          duration += (fix.time.t - prev_stamp);
+          if (fix.speed > 0) {
+            total_speed_integ += fix.speed
+            speed_count_integ += 1
+          }
+          if (duration >= speed_integration) {
+            duration = 0;
+            started = false;
+            integrated_speed = total_speed_integ / speed_count_integ;
+            integ_speed_list.push(integrated_speed);
+            if (integrated_speed > max_integ_speed) {
+              max_integ_speed = integrated_speed
+            }
+          }
+        }
+        if (fix.speed > 0) {
+          total_speed += fix.speed;
+          speed_count += 1
+        }
         dist_from_to = getDistanceFromLatLonInKm(lat_to, lng_to, fix.lat, fix.lng);
         if (dist_from_to > max_dist_from_to) {
           max_dist_from_to = dist_from_to;
@@ -158,13 +192,23 @@ processFlights = function(data) {
         if (fix.gpsalt > maxgps) {
           maxgps = fix.gpsalt
         }
+
+        prev_stamp = fix.time.t;
       });
+      avg_instant_speed = total_speed / speed_count;
+      avg_integ_speed = 0
+      if (integ_speed_list.length > 0) {
+        avg_integ_speed = (integ_speed_list.reduce((a, b) => a + b, 0) / integ_speed_list.length)
+      }
 
       flight.analysed = {
         "maxAltPressure": maxpress,
         "maxAltGPS": maxgps,
         "maxDistFromTo": max_dist_from_to,
-
+        "max_instant_speed": analyzedData.track.maxspeed,
+        "avg_instant_speed": avg_instant_speed,
+        "max_integ_speed": max_integ_speed,
+        "avg_integ_speed": avg_integ_speed,
         "xcontest_score": xcontest_score,
         "xcontest_dist": xcontest_dist,
         "ffvl_score": ffvl_score,
@@ -175,6 +219,10 @@ processFlights = function(data) {
         "maxAltPressure": 0,
         "maxAltGPS": 0,
         "maxDistFromTo": 0,
+        "max_instant_speed": 0,
+        "avg_instant_speed": 0,
+        "max_integ_speed": 0,
+        "avg_integ_speed": 0,
         "xcontest_score": 0,
         "xcontest_dist": 0,
         "ffvl_score": 0,
@@ -227,6 +275,7 @@ processFlights = function(data) {
 
   template = template.split("aa9f3975e1ac31d104905da5d2fa2d79").join(buildUserPad(flights));
   template = template.split("f71dbe52628a3f83a77ab494817525c6").join(JSON.stringify(flights));
+  template = template.split("9c2646307b6841b858e16446a494f05a").join(config.google_analytics_id);
 
   template = template.split("{{{pilot.name}}}").join(config.pilot);
   template = template.split("{{{pilot.location}}}").join(location);
