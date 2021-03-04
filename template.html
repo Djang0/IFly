@@ -58,12 +58,6 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="nb_wings" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 All wings
@@ -150,7 +144,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Total traces length</h5>
-            <p class="card-text">
+            <p class="card-text" id="trace_length">
 
 
             </p>
@@ -347,7 +341,7 @@
       <div class="col-sm-6 col-lg-3 mb-6"><!-- with tab -->
         <div class="card">
           <div class="card-header">
-            <h5 class="card-title">Speed</h5>
+            <h5 class="card-title">Instant speed</h5>
             <ul class="nav nav-tabs card-header-tabs" role="tablist" id="speed_tab">
               <li class="nav-item" role="presentation">
                 <a class="nav-link active" id="oa_speed-tab" data-bs-toggle="tab" href="#oa_speed" role="tab" aria-controls="Overall" aria-selected="true">Overall</a>
@@ -381,8 +375,109 @@
                 </div>
 
               </div>
-              <div class="tab-pane fade" id="gl_speed" role="tabpanel" aria-labelledby="Gliding"></div>
-              <div class="tab-pane fade" id="th_speed" role="tabpanel" aria-labelledby="Thermalling"></div>
+              <div class="tab-pane fade" id="gl_speed" role="tabpanel" aria-labelledby="Gliding">
+                <ul class="nav nav-tabs card-header-tabs" role="tablist" id="_gl_speed_tab">
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="max_gl_speed-tab" data-bs-toggle="tab" href="#max_gl_speed" role="tab" aria-controls="Maximum" aria-selected="true">Maximum</a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="avg_gl_speed-tab" data-bs-toggle="tab" href="#avg_gl_speed" role="tab" aria-controls="Average" aria-selected="true">Average</a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="oa_speed_tab_content">
+                  <div class="tab-pane fade show active" id="max_gl_speed" role="tabpanel" aria-labelledby="Max"> max </div>
+                  <div class="tab-pane fade" id="avg_gl_speed" role="tabpanel" aria-labelledby="Average">avg</div>
+
+                </div>
+
+              </div>
+              <div class="tab-pane fade" id="th_speed" role="tabpanel" aria-labelledby="Thermalling">
+                <ul class="nav nav-tabs card-header-tabs" role="tablist" id="_th_speed_tab">
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="max_th_speed-tab" data-bs-toggle="tab" href="#max_th_speed" role="tab" aria-controls="Maximum" aria-selected="true">Maximum</a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="avg_th_speed-tab" data-bs-toggle="tab" href="#avg_th_speed" role="tab" aria-controls="Average" aria-selected="true">Average</a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="oa_speed_tab_content">
+                  <div class="tab-pane fade show active" id="max_th_speed" role="tabpanel" aria-labelledby="Max"> max </div>
+                  <div class="tab-pane fade" id="avg_th_speed" role="tabpanel" aria-labelledby="Average">avg</div>
+
+                </div>
+              </div>
+            </div>
+
+          </div><!-- card-body -->
+        </div><!-- profil card -->
+      </div>
+      <div class="col-sm-6 col-lg-3 mb-6"><!-- with tab -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Integrated speed</h5>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist" id="i_speed_tab">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="oa_i_speed-tab" data-bs-toggle="tab" href="#oa_i_speed" role="tab" aria-controls="Overall" aria-selected="true">Overall</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="gl_i_speed-tab" data-bs-toggle="tab" href="#gl_i_speed" role="tab" aria-controls="Gliding" aria-selected="true">Gliding</a>
+              </li><li class="nav-item" role="presentation">
+                <a class="nav-link" id="th_i_speed-tab" data-bs-toggle="tab" href="#th_i_speed" role="tab" aria-controls="Thermaling" aria-selected="true">Thermaling</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+
+            <div class="tab-content" id="i_speed_tab_content">
+
+
+
+              <div class="tab-pane fade show active" id="oa_i_speed" role="tabpanel" aria-labelledby="Overall">
+                <ul class="nav nav-tabs card-header-tabs" role="tablist" id="_oa_i_speed_tab">
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="max_oa_i_speed-tab" data-bs-toggle="tab" href="#max_oa_i_speed" role="tab" aria-controls="Maximum" aria-selected="true">Maximum</a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="avg_oa_i_speed-tab" data-bs-toggle="tab" href="#avg_oa_i_speed" role="tab" aria-controls="Average" aria-selected="true">Average</a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="oa_i_speed_tab_content">
+                  <div class="tab-pane fade show active" id="max_oa_i_speed" role="tabpanel" aria-labelledby="Max"> max </div>
+                  <div class="tab-pane fade" id="avg_oa_i_speed" role="tabpanel" aria-labelledby="Average">avg</div>
+
+                </div>
+
+              </div>
+              <div class="tab-pane fade" id="gl_i_speed" role="tabpanel" aria-labelledby="Gliding">
+                <ul class="nav nav-tabs card-header-tabs" role="tablist" id="_gl_i_speed_tab">
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="max_gl_i_speed-tab" data-bs-toggle="tab" href="#max_gl_i_speed" role="tab" aria-controls="Maximum" aria-selected="true">Maximum</a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="avg_gl_i_speed-tab" data-bs-toggle="tab" href="#avg_gl_i_speed" role="tab" aria-controls="Average" aria-selected="true">Average</a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="gl_i_speed_tab_content">
+                  <div class="tab-pane fade show active" id="max_gl_i_speed" role="tabpanel" aria-labelledby="Max"> max </div>
+                  <div class="tab-pane fade" id="avg_gl_i_speed" role="tabpanel" aria-labelledby="Average">avg</div>
+
+                </div>
+              </div>
+              <div class="tab-pane fade" id="th_i_speed" role="tabpanel" aria-labelledby="Thermalling">
+                <ul class="nav nav-tabs card-header-tabs" role="tablist" id="_th_i_speed_tab">
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="max_th_i_speed-tab" data-bs-toggle="tab" href="#max_th_i_speed" role="tab" aria-controls="Maximum" aria-selected="true">Maximum</a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="avg_th_i_speed-tab" data-bs-toggle="tab" href="#avg_th_i_speed" role="tab" aria-controls="Average" aria-selected="true">Average</a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="gl_i_speed_tab_content">
+                  <div class="tab-pane fade show active" id="max_th_i_speed" role="tabpanel" aria-labelledby="Max"> max </div>
+                  <div class="tab-pane fade" id="avg_th_i_speed" role="tabpanel" aria-labelledby="Average">avg</div>
+
+                </div>
+              </div>
             </div>
 
           </div><!-- card-body -->

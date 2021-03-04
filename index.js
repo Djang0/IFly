@@ -144,9 +144,11 @@ processFlights = function(data) {
 
       lat_to = analyzedData.route.takeoff.lat
       lng_to = analyzedData.route.takeoff.lng
+      total_trace = 0;
       max_dist_from_to = 0;
       maxpress = 0;
       maxgps = 0;
+      // overall
       avg_instant_speed = 0;
       total_speed = 0;
       speed_count = 0;
@@ -154,11 +156,43 @@ processFlights = function(data) {
       speed_count_integ = 0;
       max_integ_speed = 0
       integ_speed_list = []
+      //Thermaling
+      t_max_speed = 0
+      t_avg_instant_speed = 0;
+      t_total_speed = 0;
+      t_speed_count = 0;
+      t_total_speed_integ = 0;
+      t_speed_count_integ = 0;
+      t_max_integ_speed = 0
+      t_integ_speed_list = []
+
+      // Gliding
+      g_max_speed = 0
+      g_avg_instant_speed = 0;
+      g_total_speed = 0;
+      g_speed_count = 0;
+      g_total_speed_integ = 0;
+      g_speed_count_integ = 0;
+      g_max_integ_speed = 0
+      g_integ_speed_list = []
+
       speed_integration = 20 //(sec)
       started = false;
       duration = 0
       prev_stamp = analyzedData.fixes[0].time.t //(sec)
       analyzedData.fixes.forEach((fix, i) => {
+        if (fix.status == "g") {
+          //Gliding
+          if (fix.speed > g_max_speed) {
+            g_max_speed = fix.speed
+          }
+        } else {
+          // Thermaling
+          if (fix.speed > t_max_speed) {
+            t_max_speed = fix.speed
+          }
+        }
+        total_trace += fix.distance;
         if (!started && fix.speed > 0) {
           started = true;
         }
@@ -167,6 +201,15 @@ processFlights = function(data) {
           if (fix.speed > 0) {
             total_speed_integ += fix.speed
             speed_count_integ += 1
+            if (fix.status == "g") {
+              //Gliding
+              g_total_speed_integ += fix.speed
+              g_speed_count_integ += 1
+            } else {
+              // Thermaling
+              t_total_speed_integ += fix.speed
+              t_speed_count_integ += 1
+            }
           }
           if (duration >= speed_integration) {
             duration = 0;
@@ -176,11 +219,36 @@ processFlights = function(data) {
             if (integrated_speed > max_integ_speed) {
               max_integ_speed = integrated_speed
             }
+
+            if (fix.status == "g") {
+              //Gliding
+              integrated_speed = g_total_speed_integ / g_speed_count_integ;
+              g_integ_speed_list.push(integrated_speed);
+              if (integrated_speed > g_max_integ_speed) {
+                g_max_integ_speed = integrated_speed
+              }
+            } else {
+              // Thermaling
+              integrated_speed = t_total_speed_integ / t_speed_count_integ;
+              t_integ_speed_list.push(integrated_speed);
+              if (integrated_speed > t_max_integ_speed) {
+                t_max_integ_speed = integrated_speed
+              }
+            }
           }
         }
         if (fix.speed > 0) {
           total_speed += fix.speed;
           speed_count += 1
+          if (fix.status == "g") {
+            //Gliding
+            g_total_speed += fix.speed;
+            g_speed_count += 1
+          } else {
+            // Thermaling
+            t_total_speed += fix.speed;
+            t_speed_count += 1
+          }
         }
         dist_from_to = getDistanceFromLatLonInKm(lat_to, lng_to, fix.lat, fix.lng);
         if (dist_from_to > max_dist_from_to) {
@@ -196,19 +264,43 @@ processFlights = function(data) {
         prev_stamp = fix.time.t;
       });
       avg_instant_speed = total_speed / speed_count;
+      g_avg_instant_speed = g_total_speed / g_speed_count
+      t_avg_instant_speed = t_total_speed / t_speed_count
+
       avg_integ_speed = 0
       if (integ_speed_list.length > 0) {
         avg_integ_speed = (integ_speed_list.reduce((a, b) => a + b, 0) / integ_speed_list.length)
       }
+      g_avg_integ_speed = 0
+      if (g_integ_speed_list.length > 0) {
+        g_avg_integ_speed = (g_integ_speed_list.reduce((a, b) => a + b, 0) / g_integ_speed_list.length)
+      }
+      t_avg_integ_speed = 0
+      if (t_integ_speed_list.length > 0) {
+        t_avg_integ_speed = (t_integ_speed_list.reduce((a, b) => a + b, 0) / t_integ_speed_list.length)
+      }
 
       flight.analysed = {
+        "trace_length": total_trace,
         "maxAltPressure": maxpress,
         "maxAltGPS": maxgps,
         "maxDistFromTo": max_dist_from_to,
+
         "max_instant_speed": analyzedData.track.maxspeed,
         "avg_instant_speed": avg_instant_speed,
         "max_integ_speed": max_integ_speed,
         "avg_integ_speed": avg_integ_speed,
+
+        "g_max_instant_speed": g_max_speed,
+        "g_avg_instant_speed": g_avg_instant_speed,
+        "g_max_integ_speed": g_max_integ_speed,
+        "g_avg_integ_speed": g_avg_integ_speed,
+
+        "t_max_instant_speed": t_max_speed,
+        "t_avg_instant_speed": t_avg_instant_speed,
+        "t_max_integ_speed": t_max_integ_speed,
+        "t_avg_integ_speed": t_avg_integ_speed,
+
         "xcontest_score": xcontest_score,
         "xcontest_dist": xcontest_dist,
         "ffvl_score": ffvl_score,
@@ -216,6 +308,16 @@ processFlights = function(data) {
       }
     } else {
       flight.analysed = {
+        "g_max_instant_speed": 0,
+        "g_avg_instant_speed": 0,
+        "g_max_integ_speed": 0,
+        "g_avg_integ_speed": 0,
+
+        "t_max_instant_speed": 0,
+        "t_avg_instant_speed": 0,
+        "t_max_integ_speed": 0,
+        "t_avg_integ_speed": 0,
+        "trace_length": 0,
         "maxAltPressure": 0,
         "maxAltGPS": 0,
         "maxDistFromTo": 0,

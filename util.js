@@ -124,6 +124,35 @@ function redrawBadges(filteredData) {
   xc_total_dist = 0;
   xc_avg_dist = 0;
 
+  total_length = 0;
+
+  max_speed = 0;
+  avg_speed = 0;
+
+  max_i_speed = 0;
+  avg_i_speed = 0;
+
+  g_max_speed = 0;
+  g_avg_speed = 0;
+
+  g_max_i_speed = 0;
+  g_avg_i_speed = 0;
+
+  t_max_speed = 0;
+  t_avg_speed = 0;
+
+  t_max_i_speed = 0;
+  t_avg_i_speed = 0;
+
+  sum_speed = 0
+  sum_i_speed = 0
+
+  g_sum_speed = 0
+  g_sum_i_speed = 0
+
+  t_sum_speed = 0
+  t_sum_i_speed = 0
+
   filteredData.forEach((flight) => {
     totalSeconds += flight.duration;
     flightCount += 1;
@@ -131,7 +160,28 @@ function redrawBadges(filteredData) {
       noIgcSeconds += flight.duration;
       flightNoIGC += 1;
     } else {
+      if (flight.analysed.max_instant_speed > max_speed && flight.analysed.max_instant_speed <= 75) {
+        max_speed = flight.analysed.max_instant_speed;
+      }
+      if (flight.analysed.max_integ_speed > max_i_speed) {
+        max_i_speed = flight.analysed.max_integ_speed;
+      }
 
+      if (flight.analysed.g_max_instant_speed > g_max_speed && flight.analysed.g_max_instant_speed <= 75) {
+        g_max_speed = flight.analysed.g_max_instant_speed;
+      }
+      if (flight.analysed.g_max_integ_speed > g_max_i_speed) {
+        g_max_i_speed = flight.analysed.g_max_integ_speed;
+      }
+
+      if (flight.analysed.t_max_instant_speed > t_max_speed && flight.analysed.t_max_instant_speed <= 75) {
+        t_max_speed = flight.analysed.t_max_instant_speed;
+      }
+      if (flight.analysed.max_integ_speed > max_i_speed) {
+        t_max_i_speed = flight.analysed.t_max_integ_speed;
+      }
+
+      total_length += flight.analysed.trace_length
       if (flight.analysed.maxDistFromTo > max_dist_from_to) {
         max_dist_from_to = flight.analysed.maxDistFromTo;
       }
@@ -159,8 +209,25 @@ function redrawBadges(filteredData) {
       xc_total_dist += flight.analysed.xcontest_dist
       ffvl_total_score += flight.analysed.ffvl_score
       ffvl_total_dist += flight.analysed.ffvl_dist
+
+      sum_speed += flight.analysed.avg_instant_speed
+      sum_i_speed += flight.analysed.avg_integ_speed
+
+      g_sum_speed += flight.analysed.g_avg_instant_speed
+      g_sum_i_speed += flight.analysed.g_avg_integ_speed
+
+      t_sum_speed += flight.analysed.t_avg_instant_speed
+      t_sum_i_speed += flight.analysed.t_avg_integ_speed
     }
   });
+  avg_speed = avgData(sum_speed, flightCount, flightNoIGC)
+  avg_i_speed = avgData(sum_i_speed, flightCount, flightNoIGC)
+
+  g_avg_speed = avgData(g_sum_speed, flightCount, flightNoIGC)
+  g_avg_i_speed = avgData(g_sum_i_speed, flightCount, flightNoIGC)
+
+  t_avg_speed = avgData(t_sum_speed, flightCount, flightNoIGC)
+  t_avg_i_speed = avgData(t_sum_i_speed, flightCount, flightNoIGC)
 
   avg_dist_from_to = avgData(sum_dist_from_to, flightCount, flightNoIGC)
   xc_avg_score = avgData(xc_total_score, flightCount, flightNoIGC)
@@ -170,6 +237,25 @@ function redrawBadges(filteredData) {
 
 
   if (flightNoIGC > 0) {
+    //Thermaling
+    t_avg_i_speed_h = '<span class="fs-1">' + t_avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    t_avg_speed_h = '<span class="fs-1">' + t_avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
+    t_max_speed_h = '<span class="fs-1">' + t_max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    t_max_i_speed_h = '<span class="fs-1">' + t_max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
+    //Gliding
+    g_avg_i_speed_h = '<span class="fs-1">' + g_avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    g_avg_speed_h = '<span class="fs-1">' + g_avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
+    g_max_speed_h = '<span class="fs-1">' + g_max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    g_max_i_speed_h = '<span class="fs-1">' + g_max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    //overall
+    avg_i_speed_h = '<span class="fs-1">' + avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    avg_speed_h = '<span class="fs-1">' + avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
+    max_speed_h = '<span class="fs-1">' + max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_i_speed_h = '<span class="fs-1">' + max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
     avg_xc_dist = '<span class="fs-1">' + xc_avg_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
     max_xc_dist = '<span class="fs-1">' + xc_max_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
@@ -195,6 +281,8 @@ function redrawBadges(filteredData) {
     max_dist = '<span class="fs-1">' + max_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
     avg_dist = '<span class="fs-1">' + avg_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
     sum_dist = '<span class="fs-1">' + sum_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+
+    sum_trace = '<span class="fs-1">' + (total_length / 1000).toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
   } else {
     avg_xc_dist = '<span class="fs-1">' + xc_avg_dist.toFixed(2) + ' Km</span>'
     max_xc_dist = '<span class="fs-1">' + xc_max_dist.toFixed(2) + ' Km</span>'
@@ -220,7 +308,45 @@ function redrawBadges(filteredData) {
     max_dist = '<span class="fs-1">' + max_dist_from_to.toFixed(2) + ' Km</span>'
     avg_dist = '<span class="fs-1">' + avg_dist_from_to.toFixed(2) + ' Km</span>'
     sum_dist = '<span class="fs-1">' + sum_dist_from_to.toFixed(2) + ' Km</span>'
+
+    sum_trace = '<span class="fs-1">' + (total_length / 1000).toFixed(2) + ' Km</span>'
+    // overall
+    avg_i_speed_h = '<span class="fs-1">' + avg_i_speed.toFixed(2) + ' Km/h</span>'
+    avg_speed_h = '<span class="fs-1">' + avg_speed.toFixed(2) + ' Km/h</span>'
+
+    max_speed_h = '<span class="fs-1">' + max_speed.toFixed(2) + ' Km/h</span>'
+    max_i_speed_h = '<span class="fs-1">' + max_i_speed.toFixed(2) + ' Km/h</span>'
+    //Gliding
+    g_avg_i_speed_h = '<span class="fs-1">' + g_avg_i_speed.toFixed(2) + ' Km/h</span>'
+    g_avg_speed_h = '<span class="fs-1">' + g_avg_speed.toFixed(2) + ' Km/h</span>'
+
+    g_max_speed_h = '<span class="fs-1">' + g_max_speed.toFixed(2) + ' Km/h</span>'
+    g_max_i_speed_h = '<span class="fs-1">' + g_max_i_speed.toFixed(2) + ' Km/h</span>'
+
+    //Thermaling
+
+    t_avg_i_speed_h = '<span class="fs-1">' + t_avg_i_speed.toFixed(2) + ' Km/h</span>'
+    t_avg_speed_h = '<span class="fs-1">' + t_avg_speed.toFixed(2) + ' Km/h</span>'
+
+    t_max_speed_h = '<span class="fs-1">' + t_max_speed.toFixed(2) + ' Km/h</span>'
+    t_max_i_speed_h = '<span class="fs-1">' + t_max_i_speed.toFixed(2) + ' Km/h</span>'
+
   }
+
+  $('#avg_oa_i_speed').html(avg_i_speed_h);
+  $('#avg_oa_speed').html(avg_speed_h);
+  $('#max_oa_speed').html(max_speed_h);
+  $('#max_oa_i_speed').html(max_i_speed_h);
+
+  $('#avg_gl_i_speed').html(g_avg_i_speed_h);
+  $('#avg_gl_speed').html(g_avg_speed_h);
+  $('#max_gl_speed').html(g_max_speed_h);
+  $('#max_gl_i_speed').html(g_max_i_speed_h);
+
+  $('#avg_th_i_speed').html(t_avg_i_speed_h);
+  $('#avg_th_speed').html(t_avg_speed_h);
+  $('#max_th_speed').html(t_max_speed_h);
+  $('#max_th_i_speed').html(t_max_i_speed_h);
 
   $('#sum_ffvl_score').html(sum_ffvl_score);
   $('#max_ffvl_score').html(max_ffvl_score);
@@ -246,6 +372,8 @@ function redrawBadges(filteredData) {
   $('#max_dist').html(max_dist);
   $('#avg_dist').html(avg_dist);
   $('#sum_dist').html(sum_dist);
+
+  $('#trace_length').html(sum_trace);
 
 }
 
