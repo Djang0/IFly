@@ -1,7 +1,7 @@
 const IGCAnalyzer = require('./my-igc-analyzer');
 const fs = require('fs');
 
-const igcData = fs.readFileSync('test.igc', 'utf8');
+const igcData = fs.readFileSync('really.igc', 'utf8');
 
 const analyzer = new IGCAnalyzer(igcData);
 const analyzedData = analyzer.parse(true, true);

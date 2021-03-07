@@ -102,6 +102,7 @@ processFlights = function(data) {
   console.log("found " + data.length + " flights in LogFly. Now processing...");
   const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
   bar1.start(data.length, 0);
+  speed_integration = 20 //(sec)
   flights = [];
   wings = [];
   sites = [];
@@ -134,6 +135,7 @@ processFlights = function(data) {
       var score_flight = IGCParser.parse(row.V_IGC, {
         lenient: true
       });
+      console.log(flight.id)
       var result_ffvl = solver(score_flight, scoring.FFVL).next().value;
       var result_xcontest = solver(score_flight, scoring.XContest).next().value;
 
@@ -148,6 +150,12 @@ processFlights = function(data) {
       max_dist_from_to = 0;
       maxpress = 0;
       maxgps = 0;
+      //integrated
+      max_vario = 0
+      min_vario = 0
+      // Instant
+      max_vario_i = 0
+      min_vario_i = 0
       // overall
       avg_instant_speed = 0;
       total_speed = 0;
@@ -156,6 +164,7 @@ processFlights = function(data) {
       speed_count_integ = 0;
       max_integ_speed = 0
       integ_speed_list = []
+      //  integ_vario_list = []
       //Thermaling
       t_max_speed = 0
       t_avg_instant_speed = 0;
@@ -176,9 +185,11 @@ processFlights = function(data) {
       g_max_integ_speed = 0
       g_integ_speed_list = []
 
-      speed_integration = 20 //(sec)
+      total_vario_integ = 0
+
       started = false;
       duration = 0
+
       prev_stamp = analyzedData.fixes[0].time.t //(sec)
       analyzedData.fixes.forEach((fix, i) => {
         if (fix.status == "g") {
@@ -201,6 +212,7 @@ processFlights = function(data) {
           if (fix.speed > 0) {
             total_speed_integ += fix.speed
             speed_count_integ += 1
+            total_vario_integ += fix.vario
             if (fix.status == "g") {
               //Gliding
               g_total_speed_integ += fix.speed
@@ -214,12 +226,19 @@ processFlights = function(data) {
           if (duration >= speed_integration) {
             duration = 0;
             started = false;
+            integ_vario = total_vario_integ / speed_count_integ
             integrated_speed = total_speed_integ / speed_count_integ;
             integ_speed_list.push(integrated_speed);
+            //integ_vario_list.push(integ_vario)
             if (integrated_speed > max_integ_speed) {
               max_integ_speed = integrated_speed
             }
-
+            if (integ_vario > max_vario) {
+              max_vario = integ_vario
+            }
+            if (integ_vario < min_vario) {
+              min_vario = integ_vario
+            }
             if (fix.status == "g") {
               //Gliding
               integrated_speed = g_total_speed_integ / g_speed_count_integ;
@@ -249,6 +268,12 @@ processFlights = function(data) {
             t_total_speed += fix.speed;
             t_speed_count += 1
           }
+        }
+        if (fix.vario > max_vario_i) {
+          max_vario_i = fix.vario
+        }
+        if (fix.vario < min_vario_i) {
+          min_vario_i = fix.vario
         }
         dist_from_to = getDistanceFromLatLonInKm(lat_to, lng_to, fix.lat, fix.lng);
         if (dist_from_to > max_dist_from_to) {
@@ -286,6 +311,12 @@ processFlights = function(data) {
         "maxAltGPS": maxgps,
         "maxDistFromTo": max_dist_from_to,
 
+        "min_vario": min_vario,
+        "max_vario": max_vario,
+
+        "min_vario_inst": min_vario_i,
+        "max_vario_inst": max_vario_i,
+
         "max_instant_speed": analyzedData.track.maxspeed,
         "avg_instant_speed": avg_instant_speed,
         "max_integ_speed": max_integ_speed,
@@ -312,8 +343,9 @@ processFlights = function(data) {
         "g_avg_instant_speed": 0,
         "g_max_integ_speed": 0,
         "g_avg_integ_speed": 0,
-
         "t_max_instant_speed": 0,
+        "min_vario_inst": 0,
+        "max_vario_inst": 0,
         "t_avg_instant_speed": 0,
         "t_max_integ_speed": 0,
         "t_avg_integ_speed": 0,
@@ -364,6 +396,7 @@ processFlights = function(data) {
 
     flights.push(flight);
 
+
   });
   bar1.stop();
 
@@ -374,10 +407,11 @@ processFlights = function(data) {
     return a - b;
   });
   wings.sort();
-
+  //console.log(JSON.stringify(flights));
   template = template.split("aa9f3975e1ac31d104905da5d2fa2d79").join(buildUserPad(flights));
   template = template.split("f71dbe52628a3f83a77ab494817525c6").join(JSON.stringify(flights));
   template = template.split("9c2646307b6841b858e16446a494f05a").join(config.google_analytics_id);
+  template = template.split("f9bdb6f031e779bec3700ed8a60ae2fc").join(speed_integration + '&nbsp;sec. integration');
 
   template = template.split("{{{pilot.name}}}").join(config.pilot);
   template = template.split("{{{pilot.location}}}").join(location);
