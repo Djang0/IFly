@@ -9,10 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cli-progress": "^3.8.2",
-    "dayjs": "^1.9.8",
+    "cli-progress": "^3.9.0",
+    "dayjs": "^1.10.4",
     "igc-analyzer": "0.0.1",
     "igc-xc-score": "^1.5.2",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.2"
   }
 }

@@ -135,9 +135,6 @@ processFlights = function(data) {
       var score_flight = IGCParser.parse(row.V_IGC, {
         lenient: true
       });
-
-      console.log(row.V_IGC);
-
       var result_ffvl = solver(score_flight, scoring.FFVL).next().value;
       var result_xcontest = solver(score_flight, scoring.XContest).next().value;
 
