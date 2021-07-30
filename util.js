@@ -257,109 +257,109 @@ function redrawBadges(filteredData) {
 
   if (flightNoIGC > 0) {
     //Thermaling
-    t_avg_i_speed_h = '<span class="fs-1">' + t_avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    t_avg_speed_h = '<span class="fs-1">' + t_avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    t_avg_i_speed_h = '<span class="fs-2">' + t_avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    t_avg_speed_h = '<span class="fs-2">' + t_avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    t_max_speed_h = '<span class="fs-1">' + t_max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    t_max_i_speed_h = '<span class="fs-1">' + t_max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    t_max_speed_h = '<span class="fs-2">' + t_max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    t_max_i_speed_h = '<span class="fs-2">' + t_max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
     //Gliding
-    g_avg_i_speed_h = '<span class="fs-1">' + g_avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    g_avg_speed_h = '<span class="fs-1">' + g_avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    g_avg_i_speed_h = '<span class="fs-2">' + g_avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    g_avg_speed_h = '<span class="fs-2">' + g_avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    g_max_speed_h = '<span class="fs-1">' + g_max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    g_max_i_speed_h = '<span class="fs-1">' + g_max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    g_max_speed_h = '<span class="fs-2">' + g_max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    g_max_i_speed_h = '<span class="fs-2">' + g_max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
     //overall
-    avg_i_speed_h = '<span class="fs-1">' + avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    avg_speed_h = '<span class="fs-1">' + avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    avg_i_speed_h = '<span class="fs-2">' + avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    avg_speed_h = '<span class="fs-2">' + avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    max_speed_h = '<span class="fs-1">' + max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    max_i_speed_h = '<span class="fs-1">' + max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_speed_h = '<span class="fs-2">' + max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_i_speed_h = '<span class="fs-2">' + max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    max_vario_h = '<span class="fs-1">' + max_vario.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    min_vario_h = '<span class="fs-1">' + min_vario.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_vario_h = '<span class="fs-2">' + max_vario.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    min_vario_h = '<span class="fs-2">' + min_vario.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    max_vario_i_h = '<span class="fs-1">' + max_vario_i.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    min_vario_i_h = '<span class="fs-1">' + min_vario_i.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_vario_i_h = '<span class="fs-2">' + max_vario_i.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    min_vario_i_h = '<span class="fs-2">' + min_vario_i.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    avg_xc_dist = '<span class="fs-1">' + xc_avg_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    max_xc_dist = '<span class="fs-1">' + xc_max_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    sum_xc_dist = '<span class="fs-1">' + xc_total_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    avg_xc_dist = '<span class="fs-2">' + xc_avg_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_xc_dist = '<span class="fs-2">' + xc_max_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_xc_dist = '<span class="fs-2">' + xc_total_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    avg_xc_score = '<span class="fs-1">' + xc_avg_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    max_xc_score = '<span class="fs-1">' + xc_max_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    sum_xc_score = '<span class="fs-1">' + xc_total_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    avg_xc_score = '<span class="fs-2">' + xc_avg_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_xc_score = '<span class="fs-2">' + xc_max_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_xc_score = '<span class="fs-2">' + xc_total_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    avg_ffvl_dist = '<span class="fs-1">' + ffvl_avg_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    max_ffvl_dist = '<span class="fs-1">' + ffvl_max_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    sum_ffvl_dist = '<span class="fs-1">' + ffvl_total_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    avg_ffvl_dist = '<span class="fs-2">' + ffvl_avg_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_ffvl_dist = '<span class="fs-2">' + ffvl_max_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_ffvl_dist = '<span class="fs-2">' + ffvl_total_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    avg_ffvl_score = '<span class="fs-1">' + ffvl_avg_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    max_ffvl_score = '<span class="fs-1">' + ffvl_max_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    sum_ffvl_score = '<span class="fs-1">' + ffvl_total_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    avg_ffvl_score = '<span class="fs-2">' + ffvl_avg_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_ffvl_score = '<span class="fs-2">' + ffvl_total_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    alti_gps = '<span class="fs-1">' + maxGPS + ' m</span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    alti_baro = '<span class="fs-1">' + maxBaro + ' m</span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    duration = '<span class="fs-1">' + secToHms(totalSeconds) + ' </span> <p class="fw-lighter"><small>(' + secToHms(noIgcSeconds) + ' w/o IGC)</small></p>'
-    count = '<span class="fs-1">' + flightCount + ' </span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    alti_gps = '<span class="fs-2">' + maxGPS + ' m</span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    alti_baro = '<span class="fs-2">' + maxBaro + ' m</span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    duration = '<span class="fs-2">' + secToHms(totalSeconds) + ' </span> <p class="fw-lighter"><small>(' + secToHms(noIgcSeconds) + ' w/o IGC)</small></p>'
+    count = '<span class="fs-2">' + flightCount + ' </span> <p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    max_dist = '<span class="fs-1">' + max_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    avg_dist = '<span class="fs-1">' + avg_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-    sum_dist = '<span class="fs-1">' + sum_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    max_dist = '<span class="fs-2">' + max_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    avg_dist = '<span class="fs-2">' + avg_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_dist = '<span class="fs-2">' + sum_dist_from_to.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
 
-    sum_trace = '<span class="fs-1">' + (total_length / 1000).toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+    sum_trace = '<span class="fs-2">' + (total_length / 1000).toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
   } else {
-    avg_xc_dist = '<span class="fs-1">' + xc_avg_dist.toFixed(2) + ' Km</span>'
-    max_xc_dist = '<span class="fs-1">' + xc_max_dist.toFixed(2) + ' Km</span>'
-    sum_xc_dist = '<span class="fs-1">' + xc_total_dist.toFixed(2) + ' Km</span>'
+    avg_xc_dist = '<span class="fs-2">' + xc_avg_dist.toFixed(2) + ' Km</span>'
+    max_xc_dist = '<span class="fs-2">' + xc_max_dist.toFixed(2) + ' Km</span>'
+    sum_xc_dist = '<span class="fs-2">' + xc_total_dist.toFixed(2) + ' Km</span>'
 
-    avg_xc_score = '<span class="fs-1">' + xc_avg_score.toFixed(2) + ' Pts.</span>'
-    max_xc_score = '<span class="fs-1">' + xc_max_score.toFixed(2) + ' Pts.</span>'
-    sum_xc_score = '<span class="fs-1">' + xc_total_score.toFixed(2) + ' Pts.</span>'
+    avg_xc_score = '<span class="fs-2">' + xc_avg_score.toFixed(2) + ' Pts.</span>'
+    max_xc_score = '<span class="fs-2">' + xc_max_score.toFixed(2) + ' Pts.</span>'
+    sum_xc_score = '<span class="fs-2">' + xc_total_score.toFixed(2) + ' Pts.</span>'
 
-    avg_ffvl_dist = '<span class="fs-1">' + ffvl_avg_dist.toFixed(2) + ' Km</span>'
-    max_ffvl_dist = '<span class="fs-1">' + ffvl_max_dist.toFixed(2) + ' Km</span>'
-    sum_ffvl_dist = '<span class="fs-1">' + ffvl_total_dist.toFixed(2) + ' Km</span>'
+    avg_ffvl_dist = '<span class="fs-2">' + ffvl_avg_dist.toFixed(2) + ' Km</span>'
+    max_ffvl_dist = '<span class="fs-2">' + ffvl_max_dist.toFixed(2) + ' Km</span>'
+    sum_ffvl_dist = '<span class="fs-2">' + ffvl_total_dist.toFixed(2) + ' Km</span>'
 
-    avg_ffvl_score = '<span class="fs-1">' + ffvl_avg_score.toFixed(2) + ' Pts.</span>'
-    max_ffvl_score = '<span class="fs-1">' + ffvl_max_score.toFixed(2) + ' Pts.</span>'
-    sum_ffvl_score = '<span class="fs-1">' + ffvl_total_score.toFixed(2) + ' Pts.</span>'
+    avg_ffvl_score = '<span class="fs-2">' + ffvl_avg_score.toFixed(2) + ' Pts.</span>'
+    max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span>'
+    sum_ffvl_score = '<span class="fs-2">' + ffvl_total_score.toFixed(2) + ' Pts.</span>'
 
-    max_vario_h = '<span class="fs-1">' + max_vario.toFixed(2) + ' m/s</span>'
-    min_vario_h = '<span class="fs-1">' + min_vario.toFixed(2) + ' m/s</span>'
-    max_vario_i_h = '<span class="fs-1">' + max_vario_i.toFixed(2) + ' m/s</span>'
-    min_vario_i_h = '<span class="fs-1">' + min_vario_i.toFixed(2) + ' m/s</span>'
+    max_vario_h = '<span class="fs-2">' + max_vario.toFixed(2) + ' m/s</span>'
+    min_vario_h = '<span class="fs-2">' + min_vario.toFixed(2) + ' m/s</span>'
+    max_vario_i_h = '<span class="fs-2">' + max_vario_i.toFixed(2) + ' m/s</span>'
+    min_vario_i_h = '<span class="fs-2">' + min_vario_i.toFixed(2) + ' m/s</span>'
 
-    alti_baro = '<span class="fs-1">' + maxBaro + ' m</span>'
-    alti_gps = '<span class="fs-1">' + maxGPS + ' m</span>'
-    duration = '<span class="fs-1">' + secToHms(totalSeconds) + ' </span>'
-    count = '<span class="fs-1">' + flightCount + ' </span>'
+    alti_baro = '<span class="fs-2">' + maxBaro + ' m</span>'
+    alti_gps = '<span class="fs-2">' + maxGPS + ' m</span>'
+    duration = '<span class="fs-2">' + secToHms(totalSeconds) + ' </span>'
+    count = '<span class="fs-2">' + flightCount + ' </span>'
 
-    max_dist = '<span class="fs-1">' + max_dist_from_to.toFixed(2) + ' Km</span>'
-    avg_dist = '<span class="fs-1">' + avg_dist_from_to.toFixed(2) + ' Km</span>'
-    sum_dist = '<span class="fs-1">' + sum_dist_from_to.toFixed(2) + ' Km</span>'
+    max_dist = '<span class="fs-2">' + max_dist_from_to.toFixed(2) + ' Km</span>'
+    avg_dist = '<span class="fs-2">' + avg_dist_from_to.toFixed(2) + ' Km</span>'
+    sum_dist = '<span class="fs-2">' + sum_dist_from_to.toFixed(2) + ' Km</span>'
 
-    sum_trace = '<span class="fs-1">' + (total_length / 1000).toFixed(2) + ' Km</span>'
+    sum_trace = '<span class="fs-2">' + (total_length / 1000).toFixed(2) + ' Km</span>'
     // overall
-    avg_i_speed_h = '<span class="fs-1">' + avg_i_speed.toFixed(2) + ' Km/h</span>'
-    avg_speed_h = '<span class="fs-1">' + avg_speed.toFixed(2) + ' Km/h</span>'
+    avg_i_speed_h = '<span class="fs-2">' + avg_i_speed.toFixed(2) + ' Km/h</span>'
+    avg_speed_h = '<span class="fs-2">' + avg_speed.toFixed(2) + ' Km/h</span>'
 
-    max_speed_h = '<span class="fs-1">' + max_speed.toFixed(2) + ' Km/h</span>'
-    max_i_speed_h = '<span class="fs-1">' + max_i_speed.toFixed(2) + ' Km/h</span>'
+    max_speed_h = '<span class="fs-2">' + max_speed.toFixed(2) + ' Km/h</span>'
+    max_i_speed_h = '<span class="fs-2">' + max_i_speed.toFixed(2) + ' Km/h</span>'
     //Gliding
-    g_avg_i_speed_h = '<span class="fs-1">' + g_avg_i_speed.toFixed(2) + ' Km/h</span>'
-    g_avg_speed_h = '<span class="fs-1">' + g_avg_speed.toFixed(2) + ' Km/h</span>'
+    g_avg_i_speed_h = '<span class="fs-2">' + g_avg_i_speed.toFixed(2) + ' Km/h</span>'
+    g_avg_speed_h = '<span class="fs-2">' + g_avg_speed.toFixed(2) + ' Km/h</span>'
 
-    g_max_speed_h = '<span class="fs-1">' + g_max_speed.toFixed(2) + ' Km/h</span>'
-    g_max_i_speed_h = '<span class="fs-1">' + g_max_i_speed.toFixed(2) + ' Km/h</span>'
+    g_max_speed_h = '<span class="fs-2">' + g_max_speed.toFixed(2) + ' Km/h</span>'
+    g_max_i_speed_h = '<span class="fs-2">' + g_max_i_speed.toFixed(2) + ' Km/h</span>'
 
     //Thermaling
 
-    t_avg_i_speed_h = '<span class="fs-1">' + t_avg_i_speed.toFixed(2) + ' Km/h</span>'
-    t_avg_speed_h = '<span class="fs-1">' + t_avg_speed.toFixed(2) + ' Km/h</span>'
+    t_avg_i_speed_h = '<span class="fs-2">' + t_avg_i_speed.toFixed(2) + ' Km/h</span>'
+    t_avg_speed_h = '<span class="fs-2">' + t_avg_speed.toFixed(2) + ' Km/h</span>'
 
-    t_max_speed_h = '<span class="fs-1">' + t_max_speed.toFixed(2) + ' Km/h</span>'
-    t_max_i_speed_h = '<span class="fs-1">' + t_max_i_speed.toFixed(2) + ' Km/h</span>'
+    t_max_speed_h = '<span class="fs-2">' + t_max_speed.toFixed(2) + ' Km/h</span>'
+    t_max_i_speed_h = '<span class="fs-2">' + t_max_i_speed.toFixed(2) + ' Km/h</span>'
 
   }
 

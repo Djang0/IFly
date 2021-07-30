@@ -1028,8 +1028,10 @@ class IGCAnalyzer {
           // Horizontal variation filter:
 
           distance = this.distance(fix.lat, fix.lng, this.lastfix.lat, this.lastfix.lng, "K") * 1000;
+
           speed = 0;
-          if (duration > 0) speed = distance / duration * 3.6;
+          if (duration > 0) speed = (distance / duration) * 3.6;
+
           if (speed > this.config['max-speed'] || (duration > 60 && speed > (this.config['max-speed'] / 100 * 75))) {
             fixIsOk = false;
           }
@@ -1130,6 +1132,7 @@ class IGCAnalyzer {
         if (_.has(this, 'lastfix.lat') && _.has(this, 'lastfix.lng')) {
 
           fix.distance = this.distance(fix.lat, fix.lng, this.lastfix.lat, this.lastfix.lng, "K") * 1000;
+
           if (isNaN(fix.distance)) fix.distance = 0;
 
           this.track.distance = this.track.distance + fix.distance;
@@ -1162,7 +1165,7 @@ class IGCAnalyzer {
         if (fix.duration > 0) {
 
           fix.speed = fix.distance / fix.duration * 3.6;
-
+     
           if (fix.speed > this.track.maxspeed) {
             this.track.maxspeed = fix.speed;
           }
@@ -1275,7 +1278,7 @@ class IGCAnalyzer {
   /*::         GeoDataSource.com (C) All Rights Reserved 2015		   		     :*/
   /*::                                                                         :*/
   /*::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-  distance(lat1, lon1, lat2, lon2, unit) {
+  old_distance(lat1, lon1, lat2, lon2, unit) {
 
     let theta = lon1 - lon2;
     let dist = Math.sin(this.deg2rad(lat1)) * Math.sin(this.deg2rad(lat2)) + Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.cos(this.deg2rad(theta));
@@ -1294,12 +1297,34 @@ class IGCAnalyzer {
   }
 
   rad2deg(angle) {
-    return angle * 57.29577951308232 // angle / Math.PI * 180
+      return angle * (180/Math.PI)
   }
 
-  deg2rad(angle) {
-    return angle * 0.017453292519943295 // (angle / 180) * Math.PI;
+  deg2rad(deg) {
+    return deg * (Math.PI / 180)
   }
+// https://en.wikipedia.org/wiki/Haversine_formula
+  distance(lat1, lon1, lat2, lon2, unit) {
+
+    var R = 6371; // Radius of the earth in km
+    var dLat = this.deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = this.deg2rad(lon2 - lon1);
+    var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    if (unit == "K") {
+        return d ;
+      } else if (unit == "N") {
+        return (d * 0.539957);
+      } else {
+        return (d*0.621371);
+      }
+  }
+
+
 
   // Bearing methods:
 

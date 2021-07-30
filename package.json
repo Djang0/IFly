@@ -10,9 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "cli-progress": "^3.9.0",
-    "dayjs": "^1.10.4",
+    "dayjs": "^1.10.6",
     "igc-analyzer": "0.0.1",
-    "igc-xc-score": "^1.5.2",
+    "igc-xc-score": "1.6.0",
     "sqlite3": "^5.0.2"
   }
 }
