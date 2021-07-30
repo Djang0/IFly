@@ -13,7 +13,8 @@ function secToHms(sec) {
 
 
 function getViewButton(flight_id){
-  return '<span><a class="nav-link p-2 viewer" data-id="'+flight_id.toString()+'" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="far fa-eye" data-bs-toggle="tooltip" data-bs-placement="bottom" title="view flight"></i></a></span>'
+  return '<button type="button" class="btn btn-default viewer" data-id="'+flight_id.toString()+'" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="far fa-eye" data-bs-toggle="tooltip" data-bs-placement="bottom" title="view flight"></i></button>'
+  
 
 }
 function redrawWingsFilter(wings) {
