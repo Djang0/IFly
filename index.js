@@ -307,7 +307,8 @@ processFlights = function(data) {
             if (t_integ_speed_list.length > 0) {
                 t_avg_integ_speed = (t_integ_speed_list.reduce((a, b) => a + b, 0) / t_integ_speed_list.length)
             }
-
+            
+            fs.writeFileSync(config.build_path + flight.id+".js", JSON.stringify(analyzedData.fixes));
             flight.analysed = {
                 "trace_length": total_trace,
                 "maxAltPressure": maxpress,
