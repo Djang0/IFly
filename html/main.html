@@ -64,11 +64,18 @@
         $('.viewer').click(function() {
             var id = $(this).data('id');
             var latlngs = []
+            
             $.getJSON(id + ".js", function(fixes) {
+
+                if($('#mapinsert').hasClass('leaflet-container')){
+                    $('#mapinsert').remove();
+                    $( '<div id="mapinsert" class="modal-body"></div>' ).insertAfter( "#before_modal" );
+                }
                 var flight = filteredData.find(t => t.id === id)
                 for (let fix of fixes) {
                     latlngs.push([fix.lat, fix.lng])
                 }
+                
                 var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
                 var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
 
@@ -92,7 +99,7 @@
                 });
 
                 L.marker([flight.latTo, flight.longTo], { icon: greenIcon }).addTo(mymap);
-                L.marker([latlngs[latlngs.length-1][0], latlngs[latlngs.length-1][1]], { icon: redIcon }).addTo(mymap);
+                L.marker([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]], { icon: redIcon }).addTo(mymap);
                 mymap.fitBounds(polyline.getBounds());
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
