@@ -52,8 +52,8 @@ function redrawTable(filteredData) {
 
     var table = $('#flights_table').DataTable({
       aaSorting: [
-        [0, 'desc'],
-        [1, 'desc']
+        [3, 'desc'],
+        [4, 'desc']
       ],
       data: filteredData,
       responsive: true,
@@ -61,6 +61,17 @@ function redrawTable(filteredData) {
         dataSrc: 2
       },
       columns: [{
+          data: 'id',
+          visible:false,
+          title: "id"
+        },{
+          data: 'hasIGC',
+          visible:false,
+          title: "hasIGC"
+        },{
+          data: 'null',
+          defaultContent: '<button type="button" class="btn btn-default table_viewer" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="far fa-eye" data-bs-toggle="tooltip" data-bs-placement="bottom" title="view flight"></i></button>'
+        },{
           data: 'date',
           title: "Date"
         }, {
@@ -321,7 +332,7 @@ function redrawBadges(filteredData) {
     avg_dist = '<span class="fs-2">' + avg_dist_from_to.toFixed(2) + ' Km</span><span class="fw-lighter"><small>&nbsp;(' + flightNoIGC + ' w/o IGC)</small></span>'
     sum_dist = '<span class="fs-2">' + sum_dist_from_to.toFixed(2) + ' Km</span><span class="fw-lighter"><small>&nbsp;(' + flightNoIGC + ' w/o IGC)</small></span>'
 
-    sum_trace = '<span class="fs-2">' + (total_length / 1000).toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+    sum_trace = '<span class="fs-2">' + (total_length / 1000).toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span >'
   } else {
     avg_xc_dist = '<span class="fs-2">' + xc_avg_dist.toFixed(2) + ' Km</span>'
     max_xc_dist = '<span class="fs-2">' + xc_max_dist.toFixed(2) + ' Km</span>'
