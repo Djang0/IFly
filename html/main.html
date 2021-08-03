@@ -32,6 +32,12 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=9c2646307b6841b858e16446a494f05a"></script>
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <!-- Resources -->
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
 
@@ -41,6 +47,7 @@
     gtag('js', new Date());
 
     gtag('config', '9c2646307b6841b858e16446a494f05a');
+    
     </script>
     <title>{{{pilot.name}}}'s pilot page</title>
 </head>
@@ -48,6 +55,8 @@
 <body>
     [[[skeleton]]]
     [[[modal]]]
+    <script type="text/javascript">
+    </script>
     <script type="text/javascript">
     $(document).ready(function() {
         redrawWingsFilter(wings);
@@ -66,115 +75,17 @@
             $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
         })
         $('.table_viewer').click(function() {
-            // console.log($(this).parent().parent().find('td').eq(5).html())
-            // var id = parseInt($(this).parent().parent().find('td').eq(5).html());
             var currentRow = $(this).closest("tr");
-
             var data = $('#flights_table').DataTable().row(currentRow).data();
-
             var id = parseInt(data['id']);
             var igc = data['hasIGC'];
-            if (igc) {
-                var latlngs = []
-                $.getJSON(id + ".js", function(fixes) {
-
-                    if ($('#mapinsert').hasClass('leaflet-container')) {
-                        $('#mapinsert').remove();
-                        $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
-                    }
-                    var flight = filteredData.find(t => t.id === id)
-                    for (let fix of fixes) {
-                        latlngs.push([fix.lat, fix.lng])
-                    }
-
-                    var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
-                    var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
-
-
-                    var greenIcon = new L.Icon({
-                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
-                    });
-
-                    var redIcon = new L.Icon({
-                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
-                    });
-
-                    L.marker([flight.latTo, flight.longTo], { icon: greenIcon }).addTo(mymap);
-                    L.marker([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]], { icon: redIcon }).addTo(mymap);
-                    mymap.fitBounds(polyline.getBounds());
-                    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                        maxZoom: 18,
-                        id: 'mapbox/outdoors-v11',
-                        tileSize: 512,
-                        zoomOffset: -1,
-                        accessToken: 'pk.eyJ1IjoidXBza3kiLCJhIjoiY2tycWZodGV2MG1oZDJucGZ3MDV5bmNmeCJ9.f0L_kNkjANGRJO9hlpcpvw'
-                    }).addTo(mymap);
-                });
-            } else {
-                $('#mapinsert').html('<H1> There is no IGC data for this flight</H1>');
-            }
+            setViewer(id, igc)
 
         });
+
         $('.viewer').click(function() {
             var id = $(this).data('id');
-            var latlngs = []
-
-            $.getJSON(id + ".js", function(fixes) {
-
-                if ($('#mapinsert').hasClass('leaflet-container')) {
-                    $('#mapinsert').remove();
-                    $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
-                }
-                var flight = filteredData.find(t => t.id === id)
-                for (let fix of fixes) {
-                    latlngs.push([fix.lat, fix.lng])
-                }
-
-                var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
-                var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
-
-
-                var greenIcon = new L.Icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
-                });
-
-                var redIcon = new L.Icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
-                });
-
-                L.marker([flight.latTo, flight.longTo], { icon: greenIcon }).addTo(mymap);
-                L.marker([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]], { icon: redIcon }).addTo(mymap);
-                mymap.fitBounds(polyline.getBounds());
-                L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                    maxZoom: 18,
-                    id: 'mapbox/outdoors-v11',
-                    tileSize: 512,
-                    zoomOffset: -1,
-                    accessToken: 'pk.eyJ1IjoidXBza3kiLCJhIjoiY2tycWZodGV2MG1oZDJucGZ3MDV5bmNmeCJ9.f0L_kNkjANGRJO9hlpcpvw'
-                }).addTo(mymap);
-            });
+            setViewer(id, true);
 
         });
         $('.year_item').click(function() {

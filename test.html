@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- TODO: amcharts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
+    <script src="https://kit.fontawesome.com/2383fc25b0.js" crossorigin="anonymous"></script>
+    <script src="util.js"></script>
+    <script type="text/javascript">
+    </script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+    <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/rowgroup/1.1.2/css/rowGroup.dataTables.min.css" rel="stylesheet">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=9c2646307b6841b858e16446a494f05a"></script>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <!-- Resources -->
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    </script>
+    <title>{{{pilot.name}}}'s pilot page</title>
+</head>
+
+<body>
+    <div id="chartdiv"></div>
+    <script type="text/javascript">
+    am4core.ready(function() {
+
+        var alt_data = []
+        
+            alt_data.push({ indix: 1, date: new Date(2018, 3, 20, 13, 20, 1), gpsalt: 1234, pressalt: 908 })
+            alt_data.push({ indix: 2, date: new Date(2018, 3, 20, 13, 20, 2), gpsalt: 88, pressalt: 908 })
+            alt_data.push({ indix: 3, date: new Date(2018, 3, 20, 13, 20, 3), gpsalt: 5555, pressalt: 987 })
+            alt_data.push({ indix: 4, date: new Date(2018, 3, 20, 13, 20, 4), gpsalt: 223, pressalt: 345 })
+            alt_data.push({ indix: 5, date: new Date(2018, 3, 20, 13, 20, 5), gpsalt: 3456, pressalt: 1234 })
+
+        
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+        // Create chart instance
+        let chart = am4core.create("chartdiv", am4charts.XYChart);
+
+
+        chart.data = alt_data
+
+        // Create axes
+        var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+
+
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.min = 500
+        // Create series
+        var series = chart.series.push(new am4charts.LineSeries());
+        series.dataFields.valueY = "gpsalt";
+        series.dataFields.dateX = "date";
+        series.strokeWidth = 2;
+        series.minBulletDistance = 10;
+        series.tooltipText = "Alt. GPS : {gpsalt}\nAlt. Baro {pressalt}";
+        series.tooltip.pointerOrientation = "vertical";
+
+
+        // Create series
+        var series2 = chart.series.push(new am4charts.LineSeries());
+        series2.dataFields.valueY = "pressalt";
+        series2.dataFields.dateX = "date";
+        series2.strokeWidth = 2;
+        series2.strokeDasharray = "3,4";
+        series2.stroke = series.stroke;
+
+        // Add cursor
+        chart.cursor = new am4charts.XYCursor();
+        chart.cursor.xAxis = dateAxis;
+        let bullet = series.bullets.push(new am4charts.CircleBullet());
+        bullet.fillOpacity = 0
+        bullet.strokeOpacity = 0
+        bullet.events.on("over", function(ev) {
+            var data_elem = chart.data[ev.target.dataItem.dataContext.indix]
+            if (data_elem) {
+                console.log(chart.data[ev.target.dataItem.dataContext.indix].gpsalt)
+            }
+
+
+        }, this);
+
+    });
+    </script>
+</body>
+
+</html>
