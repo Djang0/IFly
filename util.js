@@ -46,124 +46,94 @@ function redrawSitesFilter(sites) {
 function setViewer(id, hasIGC) {
     if (hasIGC) {
         var latlngs = []
-        am4core.ready(function() {
-            var myCollapse = document.getElementById('collapseExample')
-            var bsCollapse = new bootstrap.Collapse(myCollapse, {
-                toggle: true
-            })
-            $.getJSON(id + ".js", function(fixes) {
 
-                if ($('#mapinsert').hasClass('leaflet-container')) {
-                    $('#mapinsert').remove();
-                    $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
-                }
-                var alt_data = []
-                var flight = filteredData.find(t => t.id === id)
-                var indix = 0;
-                for (let fix of fixes) {
-                    latlngs.push([fix.lat, fix.lng]);
-                    alt_data.push({ indix: indix, date: new Date(2018, 3, 20, fix.time.h, fix.time.m, fix.time.s), gpsalt: fix.gpsalt, pressalt: fix.pressalt, lat: fix.lat, lng: fix.lng })
-                    indix += 1;
-                }
+        var myCollapse = document.getElementById('collapseExample')
+        var bsCollapse = new bootstrap.Collapse(myCollapse, {
+            toggle: true
+        })
+        $.getJSON(id + ".js", function(fixes) {
 
-                var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
-                var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
-                var greenIcon = new L.Icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
-                });
+            var alt_data = []
+            var flight = filteredData.find(t => t.id === id)
+            var indix = 0;
+            for (let fix of fixes) {
+                latlngs.push([fix.lng, fix.lat]);
+                alt_data.push({ indix: indix, date: new Date(2018, 3, 20, fix.time.h, fix.time.m, fix.time.s), gpsalt: fix.gpsalt, pressalt: fix.pressalt, lat: fix.lat, lng: fix.lng })
+                indix += 1;
+            }
 
-                var redIcon = new L.Icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
-                });
-
-                const fontAwesomeIcon = L.divIcon({
-                    html: '<span class="fa-stack fa-2x"><i class="fas fa-square fa-stack-2x"></i> <i class="fab fa-cloudversify fa-stack-1x fa-inverse"></i></span>',
-                    iconSize: [20, 20],
-                    className: 'myDivIcon'
-                });
-                cloud=L.marker([flight.latTo, flight.longTo], {
-                    icon: fontAwesomeIcon
-                }).addTo(mymap)
-                L.marker([flight.latTo, flight.longTo], { icon: greenIcon }).addTo(mymap);
-                L.marker([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]], { icon: redIcon }).addTo(mymap);
-                mymap.fitBounds(polyline.getBounds());
-                L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                    maxZoom: 18,
-                    id: 'mapbox/outdoors-v11',
-                    tileSize: 512,
-                    zoomOffset: -1,
-                    accessToken: 'pk.eyJ1IjoidXBza3kiLCJhIjoiY2tycWZodGV2MG1oZDJucGZ3MDV5bmNmeCJ9.f0L_kNkjANGRJO9hlpcpvw'
-                }).addTo(mymap);
-
-                // L.easyButton('fas fa-chart-area', function(btn, map) {
-                //     bsCollapse.toggle();
-                // }).addTo(mymap);
-                // Themes begin
-                am4core.useTheme(am4themes_animated);
-                // Themes end
-                // Create chart instance
-                let chart = am4core.create("chartdiv", am4charts.XYChart);
+            var geojson = {
+                'type': 'FeatureCollection',
+                'features': [{
+                    'type': 'Feature',
+                    'geometry': {
+                        'type': 'LineString',
+                        'properties': {},
+                        'coordinates': latlngs
+                    }
+                }]
+            };
 
 
-                chart.data = alt_data
-
-                // Create axes
-                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-
-
-                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-                valueAxis.min = 500
-                // Create series
-                var series = chart.series.push(new am4charts.LineSeries());
-                series.dataFields.valueY = "gpsalt";
-                series.dataFields.dateX = "date";
-                series.strokeWidth = 2;
-                series.minBulletDistance = 10;
-                series.tooltipText = "Alt. GPS : {gpsalt}\nAlt. Baro {pressalt}";
-                series.tooltip.pointerOrientation = "vertical";
-
-
-                // Create series
-                var series2 = chart.series.push(new am4charts.LineSeries());
-                series2.dataFields.valueY = "pressalt";
-                series2.dataFields.dateX = "date";
-                series2.strokeWidth = 2;
-                series2.strokeDasharray = "3,4";
-                series2.stroke = series.stroke;
-
-                // Add cursor
-                chart.cursor = new am4charts.XYCursor();
-                chart.cursor.xAxis = dateAxis;
-
-                //let bullet = series.bullets.push(new am4charts.CircleBullet());
-                //bullet.fillOpacity = 0
-                //bullet.strokeOpacity = 0
-               // console.log('pre')
-               // bullet.events.on("over", function(ev) {
-                 // console.log(chart.data[ev.target.dataItem.dataContext.indix].gpsalt)
-                    //var data_elem = chart.data[ev.target.dataItem.dataContext.indix]
-                    //if (data_elem) {
-                      //  console.log(chart.data[ev.target.dataItem.dataContext.indix].gpsalt)
-
-                        // var newLatLng = new L.LatLng(chart.data[ev.target.dataItem.dataContext.indix].lat, chart.data[ev.target.dataItem.dataContext.indix].lng);
-                        // cloud.setLatLng(newLatLng);
-                    //}
-
-
-                //}, this);
+            var map = new mapboxgl.Map({
+                container: 'mapinsert', // HTML container ID
+                style: 'mapbox://styles/mapbox/outdoors-v11', // style URL
+                center: [latlngs[0][0], latlngs[0][1]], // starting position [lng, lat]
+                zoom: 13 // starting zoom
             });
-        }); // end am4core.ready()
+            // create a red polyline from an arrays of LatLng points
+            //var polyline = mapboxgl.polyline(latlngs, { color: 'red' }).addTo(map);
+
+            map.on('load', function() {
+                map.addSource('LineString', {
+                    'type': 'geojson',
+                    'data': geojson
+                });
+                map.addLayer({
+                    'id': 'LineString',
+                    'type': 'line',
+                    'source': 'LineString',
+                    'layout': {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    'paint': {
+                        'line-color': '#BF93E4',
+                        'line-width': 2
+                    }
+                });
+            })
+            // zoom the map to the polyline
+            var coordinates = geojson.features[0].geometry.coordinates;
+
+            /*
+            Pass the first coordinates in the LineString to `lngLatBounds`,
+            then wrap each coordinate pair in `extend` to include them 
+            in the bounds result. A variation of this technique could be 
+            applied to zooming to the bounds of multiple Points or 
+            Polygon geomtetries, which would require wrapping all 
+            the coordinates with the extend method.
+            */
+
+            var bounds = coordinates.reduce(function(bounds, coord) {
+                return bounds.extend(coord);
+            }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+            map.fitBounds(bounds, {
+                padding: 20
+            });
+            // create a HTML element for each feature
+            var to_el = document.createElement('div');
+            to_el.className = 'marker_to';
+            var takeoff = new mapboxgl.Marker(to_el).takeoff.setLngLat([latlngs[0][0], latlngs[0][1]]).takeoff.addTo(map);
+            // create a HTML element for each feature
+            var ln_el = document.createElement('div');
+            ln_el.className = 'marker_ln';
+            var landing = new mapboxgl.Marker(ln_el).landing.setLngLat([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]]).landing.addTo(map);
+
+
+        });
+
     } else {
         $('#mapinsert').html('<H1> There is no IGC data for this flight</H1>');
     }

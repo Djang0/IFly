@@ -73,6 +73,15 @@ if (fs.existsSync(config.build_path)) {
     if (fs.existsSync('util.js')) {
         fs.writeFileSync(config.build_path + "util.js", fs.readFileSync('util.js'));
     }
+    if (fs.existsSync('marker-icon-green.png')) {
+        fs.writeFileSync(config.build_path + "marker-icon-green.png", fs.readFileSync('marker-icon-green.png'));
+    }
+    if (fs.existsSync('marker-icon-red.png')) {
+        fs.writeFileSync(config.build_path + "marker-icon-red.png", fs.readFileSync('marker-icon-red.png'));
+    }
+    if (fs.existsSync('marker-icon-blue.png')) {
+        fs.writeFileSync(config.build_path + "marker-icon-blue.png", fs.readFileSync('marker-icon-blue.png'));
+    }
 }
 
 buildUserPad = function(flights) {
