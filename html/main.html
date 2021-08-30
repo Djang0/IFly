@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
- [[[header]]]
+    [[[header]]]
 </head>
 
 <body>
@@ -33,7 +33,10 @@
             var data = $('#flights_table').DataTable().row(currentRow).data();
             var id = parseInt(data['id']);
             var igc = data['hasIGC'];
-            setViewer(id, igc,data['date'])
+            var flight = filteredData.find(obj => {
+                return obj.id === id
+            })
+            setViewer(id, igc, flight)
 
         });
 

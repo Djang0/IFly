@@ -43,10 +43,10 @@ function redrawSitesFilter(sites) {
     $("#sitesFilter").html(filterHTML);
 }
 
-function setViewer(id, hasIGC, datestr) {
+function setViewer(id, hasIGC, flight) {
 
     if (hasIGC) {
-
+        datestr = flight.date
         var latlngs = []
 
         // var myCollapse = document.getElementById('collapseExample')
@@ -80,6 +80,70 @@ function setViewer(id, hasIGC, datestr) {
                 indix += 1;
             }
 
+
+
+            Highcharts.chart('chartdiv', {
+                chart: {
+                    type: 'area'
+                },
+                accessibility: {
+                    description: 'Image description: A chart of GPS and barometric altirude over time.'
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: 'altitude'
+                    },
+                    ceiling: ceil,
+
+                    labels: {
+                        formatter: function() {
+                            return this.value + ' m';
+                        }
+                    }
+                },
+                tooltip: {
+                    pointFormat: '{series.name} altitude <b>{point.y:,.0f}</b> m'
+                },
+                plotOptions: {
+                    area: {
+                        marker: {
+                            enabled: false,
+                            symbol: 'circle',
+                            radius: 2,
+                            states: {
+                                hover: {
+                                    enabled: true
+                                }
+                            }
+                        }
+                    }
+                },
+                series: [{
+                        name: 'GPS',
+                        keys: ['name', 'custom.value', 'y', 'custom.lat', 'custom.lng'],
+                        point: {
+                            events: {
+                                mouseOver: function() {
+
+                                    var newLatLng = new L.LatLng(this.custom.lat, this.custom.lng);
+                                    cloud.setLatLng(newLatLng);
+                                }
+                            }
+                        },
+                        data: gps_alt_data
+                    },
+                    {
+                        name: 'Baro',
+                        visible: false,
+                        keys: ['name', 'custom.value', 'y'],
+                        data: baro_alt_data
+                    }
+
+                ]
+            });
             var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
             var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
             var greenIcon = new L.Icon({
@@ -130,77 +194,24 @@ function setViewer(id, hasIGC, datestr) {
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(mymap);
-
-            Highcharts.chart('chartdiv', {
-                chart: {
-                    type: 'area'
-                },
-                accessibility: {
-                    description: 'Image description: A chart of GPS and barometric altirude over time.'
-                },
-                xAxis: {
-                    type: 'datetime'
-                },
-                yAxis: {
-                    title: {
-                        text: 'altitude'
-                    },
-                    ceiling: ceil,
-
-                    labels: {
-                        formatter: function() {
-                            return this.value + ' m';
-                        }
-                    }
-                },
-                tooltip: {
-                    pointFormat: '{series.name} altitude <b>{point.y:,.0f}</b> m'
-                },
-                plotOptions: {
-                    area: {
-                        marker: {
-                            enabled: false,
-                            symbol: 'circle',
-                            radius: 2,
-                            states: {
-                                hover: {
-                                    enabled: true
-                                }
-                            }
-                        }
-                    }
-                },
-                series: [{
-                        name: 'Baro',
-                        visible: false,
-                        keys: ['name', 'custom.value', 'y'],
-                        data: baro_alt_data
-                    }, {
-                        name: 'GPS',
-                        keys: ['name', 'custom.value', 'y', 'custom.lat', 'custom.lng'],
-                        point: {
-                            events: {
-                                mouseOver: function() {
-
-                                    var newLatLng = new L.LatLng(this.custom.lat, this.custom.lng);
-                                    cloud.setLatLng(newLatLng);
-                                }
-                            }
-                        },
-                        data: gps_alt_data
-                    }
-
-                ]
-            });
             mymap.fitBounds(polyline.getBounds());
             L.easyButton('fa-globe', function(btn, map) {
-                alert('toto')
+                setInterval(function() {
+                    mymap.invalidateSize();
+                    mymap.fitBounds(polyline.getBounds());
+                }, 100);
+
             }).addTo(mymap);
-            $('.testa').click(function() {
+            setInterval(function() {
+                    mymap.invalidateSize();
+                    mymap.fitBounds(polyline.getBounds());
+                }, 100);
+            //mymap.invalidateSize();
+            // $('.testa').click(function() {
 
-                mymap.fitBounds(polyline.getBounds());
-
-            })
+            //     //mymap.fitBounds(polyline.getBounds());
+            //     mymap.invalidateSize();
+            // })
         });
 
     } else {
@@ -270,7 +281,10 @@ function redrawTable(filteredData) {
                 var data = $('#flights_table').DataTable().row(currentRow).data();
                 var id = parseInt(data['id']);
                 var igc = data['hasIGC'];
-                setViewer(id, igc)
+                var flight = filteredData.find(obj => {
+                    return obj.id === id
+                })
+                setViewer(id, igc, flight)
 
             });
         })
@@ -284,7 +298,7 @@ function bindAll() {
         var flight = filteredData.find(obj => {
             return obj.id === id
         })
-        setViewer(id, true, flight.date);
+        setViewer(id, true, flight);
 
     });
 }
