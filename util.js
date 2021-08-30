@@ -43,127 +43,166 @@ function redrawSitesFilter(sites) {
     $("#sitesFilter").html(filterHTML);
 }
 
-function setViewer(id, hasIGC) {
+function setViewer(id, hasIGC, datestr) {
+
     if (hasIGC) {
+
         var latlngs = []
-        am4core.ready(function() {
-            var myCollapse = document.getElementById('collapseExample')
-            var bsCollapse = new bootstrap.Collapse(myCollapse, {
-                toggle: true
-            })
-            $.getJSON(id + ".js", function(fixes) {
 
-                if ($('#mapinsert').hasClass('leaflet-container')) {
-                    $('#mapinsert').remove();
-                    $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
-                }
-                var alt_data = []
-                var flight = filteredData.find(t => t.id === id)
-                var indix = 0;
-                for (let fix of fixes) {
-                    latlngs.push([fix.lat, fix.lng]);
-                    alt_data.push({ indix: indix, date: new Date(2018, 3, 20, fix.time.h, fix.time.m, fix.time.s), gpsalt: fix.gpsalt, pressalt: fix.pressalt, lat: fix.lat, lng: fix.lng })
-                    indix += 1;
-                }
+        // var myCollapse = document.getElementById('collapseExample')
+        // var bsCollapse = new bootstrap.Collapse(myCollapse, {
+        //     toggle: true
+        // })
+        $.getJSON(id + ".js", function(fixes) {
 
-                var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
-                var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
-                var greenIcon = new L.Icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
-                });
+            if ($('#mapinsert').hasClass('leaflet-container')) {
 
-                var redIcon = new L.Icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
-                });
+                $('#mapinsert').remove();
+                $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
+            }
+            var gps_alt_data = []
+            var baro_alt_data = []
+            var flight = filteredData.find(t => t.id === id)
+            var indix = 0;
+            maxgps = Math.max.apply(Math, fixes.map(function(o) { return o.gpsalt; }))
+            maxbaro = Math.max.apply(Math, fixes.map(function(o) { return o.pressalt; }))
+            if (maxbaro > maxgps) {
+                ceil = maxbaro
+            } else {
+                ceil = maxgps
+            }
+            s = datestr.split('-')
+            for (let fix of fixes) {
+                latlngs.push([fix.lat, fix.lng]);
+                //gps_alt_data.push({ indix: indix, date: new Date(2018, 3, 20, fix.time.h, fix.time.m, fix.time.s), gpsalt: fix.gpsalt, pressalt: fix.pressalt, lat: fix.lat, lng: fix.lng })
+                gps_alt_data.push([new Date(Date.UTC(parseInt(s[0]), parseInt(s[1] - 1), parseInt(s[2]), fix.time.h, fix.time.m, fix.time.s, 0)).getTime(), fix.gpsalt, fix.gpsalt, fix.lat, fix.lng])
+                baro_alt_data.push([new Date(Date.UTC(parseInt(s[0]), parseInt(s[1] - 1), parseInt(s[2]), fix.time.h, fix.time.m, fix.time.s, 0)).getTime(), fix.pressalt, fix.pressalt])
+                indix += 1;
+            }
 
-                const fontAwesomeIcon = L.divIcon({
-                    html: '<span class="fa-stack fa-2x"><i class="fas fa-square fa-stack-2x"></i> <i class="fab fa-cloudversify fa-stack-1x fa-inverse"></i></span>',
-                    iconSize: [20, 20],
-                    className: 'myDivIcon'
-                });
-                cloud=L.marker([flight.latTo, flight.longTo], {
-                    icon: fontAwesomeIcon
-                }).addTo(mymap)
-                L.marker([flight.latTo, flight.longTo], { icon: greenIcon }).addTo(mymap);
-                L.marker([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]], { icon: redIcon }).addTo(mymap);
-                mymap.fitBounds(polyline.getBounds());
-                L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                    maxZoom: 18,
-                    id: 'mapbox/outdoors-v11',
-                    tileSize: 512,
-                    zoomOffset: -1,
-                    accessToken: 'pk.eyJ1IjoidXBza3kiLCJhIjoiY2tycWZodGV2MG1oZDJucGZ3MDV5bmNmeCJ9.f0L_kNkjANGRJO9hlpcpvw'
-                }).addTo(mymap);
-
-                // L.easyButton('fas fa-chart-area', function(btn, map) {
-                //     bsCollapse.toggle();
-                // }).addTo(mymap);
-                // Themes begin
-                am4core.useTheme(am4themes_animated);
-                // Themes end
-                // Create chart instance
-                let chart = am4core.create("chartdiv", am4charts.XYChart);
-
-
-                chart.data = alt_data
-
-                // Create axes
-                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-
-
-                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-                valueAxis.min = 500
-                // Create series
-                var series = chart.series.push(new am4charts.LineSeries());
-                series.dataFields.valueY = "gpsalt";
-                series.dataFields.dateX = "date";
-                series.strokeWidth = 2;
-                series.minBulletDistance = 10;
-                series.tooltipText = "Alt. GPS : {gpsalt}\nAlt. Baro {pressalt}";
-                series.tooltip.pointerOrientation = "vertical";
-
-
-                // Create series
-                var series2 = chart.series.push(new am4charts.LineSeries());
-                series2.dataFields.valueY = "pressalt";
-                series2.dataFields.dateX = "date";
-                series2.strokeWidth = 2;
-                series2.strokeDasharray = "3,4";
-                series2.stroke = series.stroke;
-
-                // Add cursor
-                chart.cursor = new am4charts.XYCursor();
-                chart.cursor.xAxis = dateAxis;
-
-                //let bullet = series.bullets.push(new am4charts.CircleBullet());
-                //bullet.fillOpacity = 0
-                //bullet.strokeOpacity = 0
-               // console.log('pre')
-               // bullet.events.on("over", function(ev) {
-                 // console.log(chart.data[ev.target.dataItem.dataContext.indix].gpsalt)
-                    //var data_elem = chart.data[ev.target.dataItem.dataContext.indix]
-                    //if (data_elem) {
-                      //  console.log(chart.data[ev.target.dataItem.dataContext.indix].gpsalt)
-
-                        // var newLatLng = new L.LatLng(chart.data[ev.target.dataItem.dataContext.indix].lat, chart.data[ev.target.dataItem.dataContext.indix].lng);
-                        // cloud.setLatLng(newLatLng);
-                    //}
-
-
-                //}, this);
+            var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
+            var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
+            var greenIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
             });
-        }); // end am4core.ready()
+
+            var redIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+            var blueIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            // const fontAwesomeIcon = L.divIcon({
+            //     html: '<span class="fa-stack fa-2x"><i class="fas fa-square fa-stack-2x"></i> <i class="fab fa-cloudversify fa-stack-1x fa-inverse"></i></span>',
+            //     iconSize: [20, 20],
+            //     className: 'myDivIcon'
+            // });
+            cloud = L.marker([flight.latTo, flight.longTo], {
+                icon: blueIcon
+            }).addTo(mymap)
+            L.marker([flight.latTo, flight.longTo], { icon: greenIcon }).addTo(mymap);
+            L.marker([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]], { icon: redIcon }).addTo(mymap);
+
+            // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            //     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            //     maxZoom: 18,
+            //     id: 'mapbox/outdoors-v11',
+            //     tileSize: 512,
+            //     zoomOffset: -1,
+            //     accessToken: 'pk.eyJ1IjoidXBza3kiLCJhIjoiY2tycWZlam1mMDc2bTJ1bzRrYWV0OWk3bSJ9.CfIBijQ6nqq07t7rZgXl8w'
+            // }).addTo(mymap);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(mymap);
+
+            Highcharts.chart('chartdiv', {
+                chart: {
+                    type: 'area'
+                },
+                accessibility: {
+                    description: 'Image description: A chart of GPS and barometric altirude over time.'
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: 'altitude'
+                    },
+                    ceiling: ceil,
+
+                    labels: {
+                        formatter: function() {
+                            return this.value + ' m';
+                        }
+                    }
+                },
+                tooltip: {
+                    pointFormat: '{series.name} altitude <b>{point.y:,.0f}</b> m'
+                },
+                plotOptions: {
+                    area: {
+                        marker: {
+                            enabled: false,
+                            symbol: 'circle',
+                            radius: 2,
+                            states: {
+                                hover: {
+                                    enabled: true
+                                }
+                            }
+                        }
+                    }
+                },
+                series: [{
+                        name: 'Baro',
+                        visible: false,
+                        keys: ['name', 'custom.value', 'y'],
+                        data: baro_alt_data
+                    }, {
+                        name: 'GPS',
+                        keys: ['name', 'custom.value', 'y', 'custom.lat', 'custom.lng'],
+                        point: {
+                            events: {
+                                mouseOver: function() {
+
+                                    var newLatLng = new L.LatLng(this.custom.lat, this.custom.lng);
+                                    cloud.setLatLng(newLatLng);
+                                }
+                            }
+                        },
+                        data: gps_alt_data
+                    }
+
+                ]
+            });
+            mymap.fitBounds(polyline.getBounds());
+            L.easyButton('fa-globe', function(btn, map) {
+                alert('toto')
+            }).addTo(mymap);
+            $('.testa').click(function() {
+
+                mymap.fitBounds(polyline.getBounds());
+
+            })
+        });
+
     } else {
         $('#mapinsert').html('<H1> There is no IGC data for this flight</H1>');
     }
@@ -224,8 +263,30 @@ function redrawTable(filteredData) {
                 }
             ]
         });
+        table.on('draw', function() {
+            $('.table_viewer').click(function() {
+
+                var currentRow = $(this).closest("tr");
+                var data = $('#flights_table').DataTable().row(currentRow).data();
+                var id = parseInt(data['id']);
+                var igc = data['hasIGC'];
+                setViewer(id, igc)
+
+            });
+        })
     }
 
+}
+
+function bindAll() {
+    $('.viewer').click(function() {
+        var id = $(this).data('id');
+        var flight = filteredData.find(obj => {
+            return obj.id === id
+        })
+        setViewer(id, true, flight.date);
+
+    });
 }
 
 function avgData(summed, count, noIgc) {
@@ -568,6 +629,7 @@ function redrawBadges(filteredData) {
 function redrawViz(filteredData) {
     redrawTable(filteredData)
     redrawBadges(filteredData)
+    bindAll();
 }
 
 function getFlightRepr(flight, appliedFilters) {

@@ -8,15 +8,19 @@
   "pilot_id": "be-06957",
   "google_analytics_id": "G-GB8D2PTX7Z",
   "licenses": [{
-      "license": "Pilote parapente",
+      "license": "Pilote parapente (1301)",
       "date": "28/05/19"
     }, {
-      "license": "Pilote XC parapente",
+      "license": "Pilote XC parapente (744)",
       "date": "28/05/19"
     },
     {
       "license": "IPPI 5",
       "date": "29/05/19"
+    },
+    {
+      "license": "Pilote XC GAA (11)",
+      "date": "25/08/21"
     }
   ],
   "clubs": ["Laroch'Ailes"]
