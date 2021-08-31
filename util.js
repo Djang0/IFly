@@ -587,7 +587,7 @@ function redrawBadges(filteredData) {
         sum_ffvl_dist = '<span class="fs-2">' + ffvl_total_dist.toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
         avg_ffvl_score = '<span class="fs-2">' + ffvl_avg_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
-        max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+        max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'+ getViewButton(ffvl_max_score_id);
         sum_ffvl_score = '<span class="fs-2">' + ffvl_total_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
         alti_gps = '<span class="fs-2">' + maxGPS + ' m</span> <span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span> ' + getViewButton(maxGPS_id);
