@@ -2,12 +2,24 @@
 <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="map" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <div id="before_modal" class="modal-header">
-                <h5 class="modal-title" id="map_label">Modal title</h5>
+            <div class="modal-header">
+                <h5 class="modal-title" id="map_title">Modal title</h5>
                 <button type="button" class="btn-close close_modal" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+       
+            <div id="comment-collapse" class="collapse">
+                <button type="button" class="btn-close commtoggle" aria-label="Close"></button>
+                <figure id="block_content" class='container'> 
+                    <blockquote class="blockquote blockstyle" id="comm-data">
+                       
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        <span id="pilot_name"></span> in <cite title="Source Title">Logfly database</cite>
+                    </figcaption>
+                </figure>
+            </div>
+            <div id="before_modal"></div>
             <div id="mapinsert" class="modal-body">
-                
             </div>
             <div class="modal-footer">
                 [[[viewer_chart]]]

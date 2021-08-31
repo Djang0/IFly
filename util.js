@@ -13,7 +13,7 @@ function secToHms(sec) {
 
 
 function getViewButton(flight_id) {
-    return '<button type="button" class="btn btn-default viewer" data-id="' + flight_id.toString() + '" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="far fa-eye" data-bs-toggle="tooltip" data-bs-placement="bottom" title="view flight"></i></button>'
+    return '<button type="button" class="btn btn-default viewer" data-id="' + flight_id.toString() + '" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fas fa-globe-americas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View flight trace"></i></button>'
 
 
 }
@@ -43,16 +43,12 @@ function redrawSitesFilter(sites) {
     $("#sitesFilter").html(filterHTML);
 }
 
-function setViewer(id, hasIGC, flight) {
+function setViewer(id, hasIGC) {
 
     if (hasIGC) {
-        datestr = flight.date
+
         var latlngs = []
 
-        // var myCollapse = document.getElementById('collapseExample')
-        // var bsCollapse = new bootstrap.Collapse(myCollapse, {
-        //     toggle: true
-        // })
         $.getJSON(id + ".js", function(fixes) {
 
             if ($('#mapinsert').hasClass('leaflet-container')) {
@@ -71,23 +67,30 @@ function setViewer(id, hasIGC, flight) {
             } else {
                 ceil = maxgps
             }
+            datestr = flight.date
             s = datestr.split('-')
             for (let fix of fixes) {
                 latlngs.push([fix.lat, fix.lng]);
-                //gps_alt_data.push({ indix: indix, date: new Date(2018, 3, 20, fix.time.h, fix.time.m, fix.time.s), gpsalt: fix.gpsalt, pressalt: fix.pressalt, lat: fix.lat, lng: fix.lng })
                 gps_alt_data.push([new Date(Date.UTC(parseInt(s[0]), parseInt(s[1] - 1), parseInt(s[2]), fix.time.h, fix.time.m, fix.time.s, 0)).getTime(), fix.gpsalt, fix.gpsalt, fix.lat, fix.lng])
                 baro_alt_data.push([new Date(Date.UTC(parseInt(s[0]), parseInt(s[1] - 1), parseInt(s[2]), fix.time.h, fix.time.m, fix.time.s, 0)).getTime(), fix.pressalt, fix.pressalt])
                 indix += 1;
             }
 
 
+            $('#map_title').html('Flight started at ' + flight.site + ' on ' + flight.date + ' ' + flight.time + ' UTC')
+
+
 
             Highcharts.chart('chartdiv', {
                 chart: {
                     type: 'area'
+
                 },
                 accessibility: {
                     description: 'Image description: A chart of GPS and barometric altirude over time.'
+                },
+                title: {
+                    text: 'Altitude variation over flight time'
                 },
                 xAxis: {
                     type: 'datetime'
@@ -144,6 +147,7 @@ function setViewer(id, hasIGC, flight) {
 
                 ]
             });
+
             var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
             var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
             var greenIcon = new L.Icon({
@@ -172,46 +176,65 @@ function setViewer(id, hasIGC, flight) {
                 shadowSize: [41, 41]
             });
 
-            // const fontAwesomeIcon = L.divIcon({
-            //     html: '<span class="fa-stack fa-2x"><i class="fas fa-square fa-stack-2x"></i> <i class="fab fa-cloudversify fa-stack-1x fa-inverse"></i></span>',
-            //     iconSize: [20, 20],
-            //     className: 'myDivIcon'
-            // });
             cloud = L.marker([flight.latTo, flight.longTo], {
                 icon: blueIcon
             }).addTo(mymap)
             L.marker([flight.latTo, flight.longTo], { icon: greenIcon }).addTo(mymap);
             L.marker([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]], { icon: redIcon }).addTo(mymap);
 
-            // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-            //     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            //     maxZoom: 18,
-            //     id: 'mapbox/outdoors-v11',
-            //     tileSize: 512,
-            //     zoomOffset: -1,
-            //     accessToken: 'pk.eyJ1IjoidXBza3kiLCJhIjoiY2tycWZlam1mMDc2bTJ1bzRrYWV0OWk3bSJ9.CfIBijQ6nqq07t7rZgXl8w'
-            // }).addTo(mymap);
+
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(mymap);
             mymap.fitBounds(polyline.getBounds());
-            L.easyButton('fa-globe', function(btn, map) {
-                setInterval(function() {
+            if (flight.hasComment) {
+                $('#comm-data').html('<span class="triangle"></span>' + flight.comments)
+                $('#pilot_name').html($('#famous-pilot').html())
+                L.easyButton('fa-comment-dots', function(btn, map) {
+
+                    $('#comment-collapse').toggle()
+                    setTimeout(function() {
+                        mymap.invalidateSize();
+                        mymap.fitBounds(polyline.getBounds());
+                    }, 100);
+                }).addTo(mymap);
+            }
+
+            L.easyButton('fa-chart-area', function(btn, map) {
+
+                var myCollapse = document.getElementById('collapseExample')
+                var bsCollapse = new bootstrap.Collapse(myCollapse, {
+                    toggle: true
+                })
+                setTimeout(function() {
+                    mymap.invalidateSize();
+                    mymap.fitBounds(polyline.getBounds());
+                }, 100);
+            }).addTo(mymap);
+
+            L.easyButton('fa-crosshairs', function(btn, map) {
+                setTimeout(function() {
                     mymap.invalidateSize();
                     mymap.fitBounds(polyline.getBounds());
                 }, 100);
 
             }).addTo(mymap);
-            setInterval(function() {
+
+
+            $('.commtoggle').click(function() {
+                $('#comment-collapse').hide()
+               
+                setTimeout(function() {
                     mymap.invalidateSize();
                     mymap.fitBounds(polyline.getBounds());
                 }, 100);
-            //mymap.invalidateSize();
-            // $('.testa').click(function() {
 
-            //     //mymap.fitBounds(polyline.getBounds());
-            //     mymap.invalidateSize();
-            // })
+            });
+
+            setTimeout(function() {
+                mymap.invalidateSize();
+                mymap.fitBounds(polyline.getBounds());
+            }, 100);
         });
 
     } else {
@@ -247,8 +270,16 @@ function redrawTable(filteredData) {
                     visible: false,
                     title: "hasIGC"
                 }, {
-                    data: 'null',
-                    defaultContent: '<button type="button" class="btn btn-default table_viewer" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="far fa-eye" data-bs-toggle="tooltip" data-bs-placement="bottom" title="view flight"></i></button>'
+                    data: 'hasIGC',
+                    render: function(data, type, row) {
+                        if (data) {
+                            return '<button type="button" class="btn btn-default table_viewer" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fas fa-globe-americas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View flight trace"></i></button>';
+                        } else {
+                            return '<button type="button" class="btn btn-default disabled"><i class="far fa-eye-slash" data-bs-toggle="tooltip" data-bs-placement="bottom" title="No IGC data for this flight"></i></button>';
+                        }
+
+                    }
+
                 }, {
                     data: 'date',
                     title: "Date"
@@ -298,9 +329,12 @@ function bindAll() {
         var flight = filteredData.find(obj => {
             return obj.id === id
         })
-        setViewer(id, true, flight);
+        setViewer(id, true);
 
     });
+
+
+
 }
 
 function avgData(summed, count, noIgc) {

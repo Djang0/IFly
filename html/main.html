@@ -24,6 +24,10 @@
             });
         });
         $('.close_modal').click(function() {
+            var myCollapse = document.getElementById('collapseExample')
+            var bsCollapse = new bootstrap.Collapse(myCollapse, {
+                toggle: true
+            })
             $('#mapinsert').remove();
             $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
         })

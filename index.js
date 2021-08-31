@@ -73,6 +73,9 @@ if (fs.existsSync(config.build_path)) {
     if (fs.existsSync('util.js')) {
         fs.writeFileSync(config.build_path + "util.js", fs.readFileSync('util.js'));
     }
+    if (fs.existsSync('ifly.css')) {
+        fs.writeFileSync(config.build_path + "ifly.css", fs.readFileSync('ifly.css'));
+    }
 }
 
 buildUserPad = function(flights) {
