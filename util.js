@@ -223,7 +223,7 @@ function setViewer(id, hasIGC) {
 
             $('.commtoggle').click(function() {
                 $('#comment-collapse').hide()
-               
+
                 setTimeout(function() {
                     mymap.invalidateSize();
                     mymap.fitBounds(polyline.getBounds());
@@ -358,6 +358,7 @@ function redrawBadges(filteredData) {
     flightCount = 0;
     flightNoIGC = 0;
     max_dist_from_to = 0;
+    max_dist_from_to_id = 0;
     sum_dist_from_to = 0;
 
     maxGPS_id = 0;
@@ -367,39 +368,49 @@ function redrawBadges(filteredData) {
     maxBaro = 0;
 
     ffvl_max_score = 0;
+    ffvl_max_score_id = 0;
     ffvl_total_score = 0;
     ffvl_avg_score = 0;
 
     ffvl_max_dist = 0;
+    ffvl_max_dist_id = 0;
     ffvl_total_dist = 0;
     ffvl_avg_dist = 0;
 
     xc_max_score = 0;
+    xc_max_score_id = 0;
     xc_total_score = 0;
     xc_avg_score = 0;
 
     xc_max_dist = 0;
+    xc_max_dist_id = 0;
     xc_total_dist = 0;
     xc_avg_dist = 0;
 
     total_length = 0;
 
     max_speed = 0;
+    max_speed_id = 0;
     avg_speed = 0;
 
     max_i_speed = 0;
+    max_i_speed_id = 0;
     avg_i_speed = 0;
 
     g_max_speed = 0;
+    g_max_speed_id = 0;
     g_avg_speed = 0;
 
+    g_max_i_speed_id = 0;
     g_max_i_speed = 0;
     g_avg_i_speed = 0;
 
     t_max_speed = 0;
+    t_max_speed_id = 0;
     t_avg_speed = 0;
 
     t_max_i_speed = 0;
+    t_max_i_speed_id = 0;
     t_avg_i_speed = 0;
 
     sum_speed = 0
@@ -412,10 +423,14 @@ function redrawBadges(filteredData) {
     t_sum_i_speed = 0
 
     max_vario = 0
+    max_vario_id = 0
     min_vario = 0
+    min_vario_id = 0
 
     max_vario_i = 0
+    max_vario_i_id = 0
     min_vario_i = 0
+    min_vario_i_id = 0
 
 
     filteredData.forEach((flight) => {
@@ -427,41 +442,52 @@ function redrawBadges(filteredData) {
         } else {
             if (flight.analysed.max_vario > max_vario) {
                 max_vario = flight.analysed.max_vario;
+                max_vario_id = flight.id
             }
             if (flight.analysed.min_vario < min_vario) {
                 min_vario = flight.analysed.min_vario;
+                min_vario_id = flight.id
             }
 
             if (flight.analysed.max_vario_inst > max_vario_i) {
                 max_vario_i = flight.analysed.max_vario_inst;
+                max_vario_i_id = flight.id
             }
             if (flight.analysed.min_vario_inst < min_vario_i) {
                 min_vario_i = flight.analysed.min_vario_inst;
+                min_vario_i_id = flight.id
             }
             if (flight.analysed.max_instant_speed > max_speed) {
                 max_speed = flight.analysed.max_instant_speed;
+                max_speed_id = flight.id
             }
             if (flight.analysed.max_integ_speed > max_i_speed) {
                 max_i_speed = flight.analysed.max_integ_speed;
+                max_i_speed_id = flight.id
             }
 
             if (flight.analysed.g_max_instant_speed > g_max_speed) {
                 g_max_speed = flight.analysed.g_max_instant_speed;
+                g_max_speed_id = flight.id
             }
             if (flight.analysed.g_max_integ_speed > g_max_i_speed) {
                 g_max_i_speed = flight.analysed.g_max_integ_speed;
+                g_max_i_speed_id = flight.id
             }
 
             if (flight.analysed.t_max_instant_speed > t_max_speed) {
                 t_max_speed = flight.analysed.t_max_instant_speed;
+                t_max_speed_id = flight.id
             }
             if (flight.analysed.t_max_integ_speed > max_i_speed) {
                 t_max_i_speed = flight.analysed.t_max_integ_speed;
+                t_max_i_speed_id = flight.id
             }
 
             total_length += flight.analysed.trace_length
             if (flight.analysed.maxDistFromTo > max_dist_from_to) {
                 max_dist_from_to = flight.analysed.maxDistFromTo;
+                max_dist_from_to_id = flight.id
             }
             if (flight.analysed.maxAltPressure > maxBaro) {
                 maxBaro = flight.analysed.maxAltPressure
@@ -475,15 +501,19 @@ function redrawBadges(filteredData) {
 
             if (flight.analysed.xcontest_score > xc_max_score) {
                 xc_max_score = flight.analysed.xcontest_score
+                xc_max_score_id = flight.id
             }
             if (flight.analysed.xcontest_dist > xc_max_dist) {
                 xc_max_dist = flight.analysed.xcontest_dist
+                xc_max_dist_id = flight.id
             }
             if (flight.analysed.ffvl_score > ffvl_max_score) {
                 ffvl_max_score = flight.analysed.ffvl_score
+                ffvl_max_score_id = flight.id
             }
             if (flight.analysed.ffvl_dist > ffvl_max_dist) {
                 ffvl_max_dist = flight.analysed.ffvl_dist
+                ffvl_max_dist_id = flight.id
             }
             sum_dist_from_to += flight.analysed.maxDistFromTo
             xc_total_score += flight.analysed.xcontest_score
@@ -519,85 +549,85 @@ function redrawBadges(filteredData) {
 
     if (flightNoIGC > 0) {
         //Thermaling
-        t_avg_i_speed_h = '<span class="fs-2">' + t_avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        t_avg_speed_h = '<span class="fs-2">' + t_avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        t_avg_i_speed_h = '<span class="fs-2">' + t_avg_i_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+        t_avg_speed_h = '<span class="fs-2">' + t_avg_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
-        t_max_speed_h = '<span class="fs-2">' + t_max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        t_max_i_speed_h = '<span class="fs-2">' + t_max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        t_max_speed_h = '<span class="fs-2">' + t_max_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(t_max_speed_id);
+        t_max_i_speed_h = '<span class="fs-2">' + t_max_i_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(t_max_i_speed_id);
 
         //Gliding
-        g_avg_i_speed_h = '<span class="fs-2">' + g_avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        g_avg_speed_h = '<span class="fs-2">' + g_avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        g_avg_i_speed_h = '<span class="fs-2">' + g_avg_i_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+        g_avg_speed_h = '<span class="fs-2">' + g_avg_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
-        g_max_speed_h = '<span class="fs-2">' + g_max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        g_max_i_speed_h = '<span class="fs-2">' + g_max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        g_max_speed_h = '<span class="fs-2">' + g_max_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(g_max_speed_id);
+        g_max_i_speed_h = '<span class="fs-2">' + g_max_i_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(g_max_i_speed_id);
         //overall
-        avg_i_speed_h = '<span class="fs-2">' + avg_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        avg_speed_h = '<span class="fs-2">' + avg_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        avg_i_speed_h = '<span class="fs-2">' + avg_i_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+        avg_speed_h = '<span class="fs-2">' + avg_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
-        max_speed_h = '<span class="fs-2">' + max_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        max_i_speed_h = '<span class="fs-2">' + max_i_speed.toFixed(2) + ' Km/h</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        max_speed_h = '<span class="fs-2">' + max_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(max_speed_id);
+        max_i_speed_h = '<span class="fs-2">' + max_i_speed.toFixed(2) + ' Km/h</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(max_i_speed_id);
 
-        max_vario_h = '<span class="fs-2">' + max_vario.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        min_vario_h = '<span class="fs-2">' + min_vario.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        max_vario_h = '<span class="fs-2">' + max_vario.toFixed(2) + ' m/s</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(max_vario_id);
+        min_vario_h = '<span class="fs-2">' + min_vario.toFixed(2) + ' m/s</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(min_vario_id);
 
-        max_vario_i_h = '<span class="fs-2">' + max_vario_i.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        min_vario_i_h = '<span class="fs-2">' + min_vario_i.toFixed(2) + ' m/s</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        max_vario_i_h = '<span class="fs-2">' + max_vario_i.toFixed(2) + ' m/s</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(max_vario_i_id);
+        min_vario_i_h = '<span class="fs-2">' + min_vario_i.toFixed(2) + ' m/s</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(min_vario_i_id);
 
-        avg_xc_dist = '<span class="fs-2">' + xc_avg_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        max_xc_dist = '<span class="fs-2">' + xc_max_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        sum_xc_dist = '<span class="fs-2">' + xc_total_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        avg_xc_dist = '<span class="fs-2">' + xc_avg_dist.toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+        max_xc_dist = '<span class="fs-2">' + xc_max_dist.toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(xc_max_dist_id);
+        sum_xc_dist = '<span class="fs-2">' + xc_total_dist.toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
-        avg_xc_score = '<span class="fs-2">' + xc_avg_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        max_xc_score = '<span class="fs-2">' + xc_max_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        sum_xc_score = '<span class="fs-2">' + xc_total_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        avg_xc_score = '<span class="fs-2">' + xc_avg_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+        max_xc_score = '<span class="fs-2">' + xc_max_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(xc_max_score_id);
+        sum_xc_score = '<span class="fs-2">' + xc_total_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
-        avg_ffvl_dist = '<span class="fs-2">' + ffvl_avg_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        max_ffvl_dist = '<span class="fs-2">' + ffvl_max_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        sum_ffvl_dist = '<span class="fs-2">' + ffvl_total_dist.toFixed(2) + ' Km</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        avg_ffvl_dist = '<span class="fs-2">' + ffvl_avg_dist.toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+        max_ffvl_dist = '<span class="fs-2">' + ffvl_max_dist.toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(ffvl_max_dist_id);
+        sum_ffvl_dist = '<span class="fs-2">' + ffvl_total_dist.toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
-        avg_ffvl_score = '<span class="fs-2">' + ffvl_avg_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
-        sum_ffvl_score = '<span class="fs-2">' + ffvl_total_score.toFixed(2) + ' Pts.</span><p class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></p>'
+        avg_ffvl_score = '<span class="fs-2">' + ffvl_avg_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+        max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
+        sum_ffvl_score = '<span class="fs-2">' + ffvl_total_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
         alti_gps = '<span class="fs-2">' + maxGPS + ' m</span> <span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span> ' + getViewButton(maxGPS_id);
         alti_baro = '<span class="fs-2">' + maxBaro + ' m</span> <span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(maxBaro_id);
         duration = '<span class="fs-2">' + secToHms(totalSeconds) + ' </span> <span class="fw-lighter"><small>(' + secToHms(noIgcSeconds) + ' w/o IGC)</small></span>'
         count = '<span class="fs-2">' + flightCount + ' </span> <span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
-        max_dist = '<span class="fs-2">' + max_dist_from_to.toFixed(2) + ' Km</span><span class="fw-lighter"><small>&nbsp;(' + flightNoIGC + ' w/o IGC)</small></span>'
+        max_dist = '<span class="fs-2">' + max_dist_from_to.toFixed(2) + ' Km</span><span class="fw-lighter"><small>&nbsp;(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(max_dist_from_to_id);
         avg_dist = '<span class="fs-2">' + avg_dist_from_to.toFixed(2) + ' Km</span><span class="fw-lighter"><small>&nbsp;(' + flightNoIGC + ' w/o IGC)</small></span>'
         sum_dist = '<span class="fs-2">' + sum_dist_from_to.toFixed(2) + ' Km</span><span class="fw-lighter"><small>&nbsp;(' + flightNoIGC + ' w/o IGC)</small></span>'
 
         sum_trace = '<span class="fs-2">' + (total_length / 1000).toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span >'
     } else {
         avg_xc_dist = '<span class="fs-2">' + xc_avg_dist.toFixed(2) + ' Km</span>'
-        max_xc_dist = '<span class="fs-2">' + xc_max_dist.toFixed(2) + ' Km</span>'
+        max_xc_dist = '<span class="fs-2">' + xc_max_dist.toFixed(2) + ' Km</span>' + getViewButton(xc_max_dist_id);
         sum_xc_dist = '<span class="fs-2">' + xc_total_dist.toFixed(2) + ' Km</span>'
 
         avg_xc_score = '<span class="fs-2">' + xc_avg_score.toFixed(2) + ' Pts.</span>'
-        max_xc_score = '<span class="fs-2">' + xc_max_score.toFixed(2) + ' Pts.</span>'
+        max_xc_score = '<span class="fs-2">' + xc_max_score.toFixed(2) + ' Pts.</span>' + getViewButton(xc_max_score_id);
         sum_xc_score = '<span class="fs-2">' + xc_total_score.toFixed(2) + ' Pts.</span>'
 
         avg_ffvl_dist = '<span class="fs-2">' + ffvl_avg_dist.toFixed(2) + ' Km</span>'
-        max_ffvl_dist = '<span class="fs-2">' + ffvl_max_dist.toFixed(2) + ' Km</span>'
+        max_ffvl_dist = '<span class="fs-2">' + ffvl_max_dist.toFixed(2) + ' Km</span>' + getViewButton(ffvl_max_dist_id);
         sum_ffvl_dist = '<span class="fs-2">' + ffvl_total_dist.toFixed(2) + ' Km</span>'
 
         avg_ffvl_score = '<span class="fs-2">' + ffvl_avg_score.toFixed(2) + ' Pts.</span>'
-        max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span>'
+        max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span>' + getViewButton(ffvl_max_score_id);
         sum_ffvl_score = '<span class="fs-2">' + ffvl_total_score.toFixed(2) + ' Pts.</span>'
 
-        max_vario_h = '<span class="fs-2">' + max_vario.toFixed(2) + ' m/s</span>'
-        min_vario_h = '<span class="fs-2">' + min_vario.toFixed(2) + ' m/s</span>'
-        max_vario_i_h = '<span class="fs-2">' + max_vario_i.toFixed(2) + ' m/s</span>'
-        min_vario_i_h = '<span class="fs-2">' + min_vario_i.toFixed(2) + ' m/s</span>'
+        max_vario_h = '<span class="fs-2">' + max_vario.toFixed(2) + ' m/s</span>' + getViewButton(max_vario_id);
+        min_vario_h = '<span class="fs-2">' + min_vario.toFixed(2) + ' m/s</span>' + getViewButton(min_vario_id);
+        max_vario_i_h = '<span class="fs-2">' + max_vario_i.toFixed(2) + ' m/s</span>' + getViewButton(max_vario_i_id);
+        min_vario_i_h = '<span class="fs-2">' + min_vario_i.toFixed(2) + ' m/s</span>' + getViewButton(min_vario_i_id);
 
         alti_baro = '<span class="fs-2">' + maxBaro + ' m</span>' + getViewButton(maxBaro_id);
         alti_gps = '<span class="fs-2">' + maxGPS + ' m</span>' + getViewButton(maxGPS_id);
         duration = '<span class="fs-2">' + secToHms(totalSeconds) + ' </span>'
         count = '<span class="fs-2">' + flightCount + ' </span>'
 
-        max_dist = '<span class="fs-2">' + max_dist_from_to.toFixed(2) + ' Km</span>'
+        max_dist = '<span class="fs-2">' + max_dist_from_to.toFixed(2) + ' Km</span>' + getViewButton(max_dist_from_to_id);
         avg_dist = '<span class="fs-2">' + avg_dist_from_to.toFixed(2) + ' Km</span>'
         sum_dist = '<span class="fs-2">' + sum_dist_from_to.toFixed(2) + ' Km</span>'
 
@@ -606,22 +636,22 @@ function redrawBadges(filteredData) {
         avg_i_speed_h = '<span class="fs-2">' + avg_i_speed.toFixed(2) + ' Km/h</span>'
         avg_speed_h = '<span class="fs-2">' + avg_speed.toFixed(2) + ' Km/h</span>'
 
-        max_speed_h = '<span class="fs-2">' + max_speed.toFixed(2) + ' Km/h</span>'
-        max_i_speed_h = '<span class="fs-2">' + max_i_speed.toFixed(2) + ' Km/h</span>'
+        max_speed_h = '<span class="fs-2">' + max_speed.toFixed(2) + ' Km/h</span>' + getViewButton(max_speed_id);
+        max_i_speed_h = '<span class="fs-2">' + max_i_speed.toFixed(2) + ' Km/h</span>' + getViewButton(max_i_speed_id);
         //Gliding
         g_avg_i_speed_h = '<span class="fs-2">' + g_avg_i_speed.toFixed(2) + ' Km/h</span>'
         g_avg_speed_h = '<span class="fs-2">' + g_avg_speed.toFixed(2) + ' Km/h</span>'
 
-        g_max_speed_h = '<span class="fs-2">' + g_max_speed.toFixed(2) + ' Km/h</span>'
-        g_max_i_speed_h = '<span class="fs-2">' + g_max_i_speed.toFixed(2) + ' Km/h</span>'
+        g_max_speed_h = '<span class="fs-2">' + g_max_speed.toFixed(2) + ' Km/h</span>' + getViewButton(g_max_speed_id);
+        g_max_i_speed_h = '<span class="fs-2">' + g_max_i_speed.toFixed(2) + ' Km/h</span>' + getViewButton(g_max_i_speed_id);
 
         //Thermaling
 
         t_avg_i_speed_h = '<span class="fs-2">' + t_avg_i_speed.toFixed(2) + ' Km/h</span>'
         t_avg_speed_h = '<span class="fs-2">' + t_avg_speed.toFixed(2) + ' Km/h</span>'
 
-        t_max_speed_h = '<span class="fs-2">' + t_max_speed.toFixed(2) + ' Km/h</span>'
-        t_max_i_speed_h = '<span class="fs-2">' + t_max_i_speed.toFixed(2) + ' Km/h</span>'
+        t_max_speed_h = '<span class="fs-2">' + t_max_speed.toFixed(2) + ' Km/h</span>' + getViewButton(t_max_speed_id);
+        t_max_i_speed_h = '<span class="fs-2">' + t_max_i_speed.toFixed(2) + ' Km/h</span>' + getViewButton(t_max_i_speed_id);
 
     }
 
