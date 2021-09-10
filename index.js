@@ -76,6 +76,12 @@ if (fs.existsSync(config.build_path)) {
     if (fs.existsSync('ifly.css')) {
         fs.writeFileSync(config.build_path + "ifly.css", fs.readFileSync('ifly.css'));
     }
+    if (fs.existsSync('dark-unica.js')) {
+        fs.writeFileSync(config.build_path + "dark-unica.js", fs.readFileSync('dark-unica.js'));
+    }
+    if (fs.existsSync('dark-unica.js.map')) {
+        fs.writeFileSync(config.build_path + "dark-unica.js.map", fs.readFileSync('dark-unica.js.map'));
+    }
 }
 
 buildUserPad = function(flights) {

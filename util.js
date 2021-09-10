@@ -14,8 +14,6 @@ function secToHms(sec) {
 
 function getViewButton(flight_id) {
     return '<button type="button" class="btn btn-default viewer" data-id="' + flight_id.toString() + '" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fas fa-globe-americas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View flight trace"></i></button>'
-
-
 }
 
 function redrawWingsFilter(wings) {
@@ -587,7 +585,7 @@ function redrawBadges(filteredData) {
         sum_ffvl_dist = '<span class="fs-2">' + ffvl_total_dist.toFixed(2) + ' Km</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
         avg_ffvl_score = '<span class="fs-2">' + ffvl_avg_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
-        max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'+ getViewButton(ffvl_max_score_id);
+        max_ffvl_score = '<span class="fs-2">' + ffvl_max_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>' + getViewButton(ffvl_max_score_id);
         sum_ffvl_score = '<span class="fs-2">' + ffvl_total_score.toFixed(2) + ' Pts.</span><span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span>'
 
         alti_gps = '<span class="fs-2">' + maxGPS + ' m</span> <span class="fw-lighter"><small>(' + flightNoIGC + ' w/o IGC)</small></span> ' + getViewButton(maxGPS_id);
@@ -704,9 +702,372 @@ function redrawBadges(filteredData) {
     $('#trace_length').html(sum_trace);
 }
 
+function redrawPerCtryDuration(datas) {
+    Highcharts.chart('per_ctry_dur', {
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45
+            }
+        },
+        title: {
+            text: 'Flight(s) duration per country'
+        },
+
+        plotOptions: {
+            pie: {
+                innerSize: 100,
+                depth: 45
+            }
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.1f} hours</b>'
+        },
+        series: [{
+            name: 'Total duration',
+            data: datas
+        }]
+    });
+}
+
+function redrawPerSiteDuration(datas) {
+    Highcharts.chart('per_site_dur', {
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: 'Flight(s) duration per site'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.1f} hours</b>'
+        },
+        series: [{
+            type: 'pie',
+            name: 'Total duration',
+            data: datas
+        }]
+    });
+}
+
+function redrawPerCtry(datas) {
+    Highcharts.chart('per_ctry', {
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45
+            }
+        },
+        title: {
+            text: 'Flight(s) per country'
+        },
+
+        plotOptions: {
+            pie: {
+                innerSize: 100,
+                depth: 45
+            }
+        },
+        series: [{
+            name: 'Flights',
+            data: datas
+        }]
+    });
+}
+
+function redrawPerSite(datas) {
+    Highcharts.chart('per_site', {
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: 'Flight(s) per site'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Flights',
+            data: datas
+        }]
+    });
+}
+
+function redrawHistoCount(datas) {
+    Highcharts.chart('histo_count', {
+        chart: {
+            type: 'column',
+            options3d: {
+                enabled: true,
+                alpha: 10,
+                beta: 25,
+                depth: 70
+            }
+        },
+        title: {
+            text: 'Evolution of flight(s) count through time'
+        },
+        plotOptions: {
+            column: {
+                depth: 25
+            }
+        },
+        xAxis: {
+            categories: Highcharts.getOptions().lang.shortMonths,
+            labels: {
+                skew3d: true,
+                style: {
+                    fontSize: '16px'
+                }
+            }
+        },
+        yAxis: {
+            title: {
+                text: null
+            }
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.1f} flight(s)</b>'
+        },
+        series: datas
+    });
+}
+
+function redrawHistoDuration(datas) {
+    Highcharts.chart('histo_duration', {
+        chart: {
+            type: 'column',
+            options3d: {
+                enabled: true,
+                alpha: 10,
+                beta: 25,
+                depth: 70
+            }
+        },
+        title: {
+            text: 'Evolution of flight(s) duration through time'
+        },
+        plotOptions: {
+            column: {
+                depth: 25
+            }
+        },
+        xAxis: {
+            categories: Highcharts.getOptions().lang.shortMonths,
+            labels: {
+                skew3d: true,
+                style: {
+                    fontSize: '16px'
+                }
+            }
+        },
+        yAxis: {
+            title: {
+                text: null
+            }
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.1f} hours</b>'
+        },
+        series: datas
+    });
+}
+
+function redrawYearDuration(datas) {
+    Highcharts.chart('y_dur', {
+        chart: {
+            type: 'column',
+            options3d: {
+                enabled: true,
+                alpha: 27,
+                beta: 14,
+                depth: 100,
+                viewDistance: 25
+            }
+        },
+        title: {
+            text: 'Yearly flight duration evolution'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.1f} hours</b>'
+        },
+        plotOptions: {
+            column: {
+                depth: 25
+            }
+        },
+        series: [{
+            name: 'Duration',
+            data: datas,
+            color: '#20c997'
+        }]
+    });
+}
+
+function redrawYearCount(datas) {
+
+    Highcharts.chart('y_cpt', {
+        chart: {
+            type: 'column',
+            options3d: {
+                enabled: true,
+                alpha: 27,
+                beta: 14,
+                depth: 100,
+                viewDistance: 25
+            }
+        },
+        title: {
+            text: 'Yearly flight count evolution'
+        },
+        plotOptions: {
+            column: {
+                depth: 25
+            }
+        },
+        series: [{
+            name: 'Flights',
+            data: datas
+        }]
+    });
+}
+
+function redrawFigures(filteredData) {
+    ctry_count = {}
+    site_count = {}
+    ctry_duration = {}
+    site_duration = {}
+    year_count = {}
+    year_duration = {}
+    histo_duration = {}
+    histo_count = {}
+    filteredData.forEach((flight) => {
+        datestr = flight.date
+        s = datestr.split('-')
+        y = parseInt(s[0])
+        m = parseInt(s[1])
+        if (histo_count.hasOwnProperty(y)) {
+            if (histo_count[y][m - 1]) {
+                histo_count[y][m - 1] = histo_count[y][m - 1] + 1
+                histo_duration[y][m - 1] = histo_duration[y][m - 1] + flight.duration
+            } else {
+                histo_count[y][m - 1] = 1
+                histo_duration[y][m - 1] = flight.duration
+            }
+
+        } else {
+            histo_count[y] = [null, null, null, null, null, null, null, null, null, null, null, null]
+            histo_duration[y] = [null, null, null, null, null, null, null, null, null, null, null, null]
+        }
+
+        if (year_count.hasOwnProperty(y)) {
+            year_count[y] = year_count[y] + 1
+            year_duration[y] = year_duration[y] + flight.duration
+        } else {
+            year_count[y] = 1
+            year_duration[y] = flight.duration
+        }
+        if (site_count.hasOwnProperty(flight.site)) {
+            site_count[flight.site] += 1
+        } else {
+            site_count[flight.site] = 1
+        }
+        if (ctry_count.hasOwnProperty(flight.country)) {
+            ctry_count[flight.country] += 1
+        } else {
+            ctry_count[flight.country] = 1
+        }
+        if (site_duration.hasOwnProperty(flight.site)) {
+            site_duration[flight.site] += flight.duration
+        } else {
+            site_duration[flight.site] = flight.duration
+        }
+        if (ctry_duration.hasOwnProperty(flight.country)) {
+            ctry_duration[flight.country] += flight.duration
+        } else {
+            ctry_duration[flight.country] = flight.duration
+        }
+    })
+    ctry_data = []
+    ctry_duration_data = []
+    for (let ctry in ctry_count) {
+        ctry_duration_data.push([ctry, ctry_duration[ctry] / 3600])
+        ctry_data.push([ctry, ctry_count[ctry]])
+    }
+    site_data = []
+    site_duration_data = []
+    for (let site in site_count) {
+        site_duration_data.push([site, site_duration[site] / 3600])
+        site_data.push([site, site_count[site]])
+    }
+    k = Object.keys(histo_duration)
+    histo_duration_series = []
+    histo_count_series = []
+    for (let y in k) {
+        for (let z in histo_duration[k[y]]) {
+            if (histo_duration[k[y]][z]) {
+                histo_duration[k[y]][z] = histo_duration[k[y]][z] / 3600
+            }
+
+        }
+        histo_count_series.push({ name: k[y].toString(), data: histo_count[k[y]] })
+        histo_duration_series.push({ name: k[y].toString(), data: histo_duration[k[y]] })
+    }
+
+    year_count_data = []
+    year_duration_data = []
+    for (let y in year_count) {
+        year_duration_data.push([y, year_duration[y] / 3600])
+        year_count_data.push([y, year_count[y]])
+    }
+    redrawPerCtry(ctry_data)
+    redrawPerSite(site_data)
+
+    redrawPerCtryDuration(ctry_duration_data)
+    redrawPerSiteDuration(site_duration_data)
+
+    redrawHistoCount(histo_count_series)
+    redrawHistoDuration(histo_duration_series)
+
+    redrawYearCount(year_count_data)
+    redrawYearDuration(year_duration_data)
+}
+
 function redrawViz(filteredData) {
     redrawTable(filteredData)
     redrawBadges(filteredData)
+    redrawFigures(filteredData)
     bindAll();
 }
 

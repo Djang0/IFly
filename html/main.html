@@ -16,7 +16,14 @@
         redrawYearsFilter(years);
         redrawSitesFilter(sites);
         redrawViz(filteredData);
-
+        var tabEl = document.querySelector('button[data-bs-toggle="tab"]')
+        $('.resizer').on('shown.bs.tab', function(event) {
+            //event.target // newly activated tab
+            //event.relatedTarget // previous active tab
+           
+            window.dispatchEvent(new Event('resize'));
+        })
+      
         $("#site_input").on("keyup", function() {
             var value = $(this).val().toLowerCase();
             $("#sitesFilter li.filterable").filter(function() {
