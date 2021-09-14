@@ -41,202 +41,210 @@ function redrawSitesFilter(sites) {
     $("#sitesFilter").html(filterHTML);
 }
 
-function setViewer(id, hasIGC) {
+function setViewer(id) {
+    
+    if (parseInt(id) > 0) {
+        var flight = filteredData.find(t => t.id === id)
+        if (flight) {
+          if (flight.hasIGC) {
+            var latlngs = []
 
-    if (hasIGC) {
+            $.getJSON(id + ".js", function(fixes) {
 
-        var latlngs = []
+                if ($('#mapinsert').hasClass('leaflet-container')) {
 
-        $.getJSON(id + ".js", function(fixes) {
+                    $('#mapinsert').remove();
+                    $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
+                }
+                var gps_alt_data = []
+                var baro_alt_data = []
 
-            if ($('#mapinsert').hasClass('leaflet-container')) {
-
-                $('#mapinsert').remove();
-                $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
-            }
-            var gps_alt_data = []
-            var baro_alt_data = []
-            var flight = filteredData.find(t => t.id === id)
-            var indix = 0;
-            maxgps = Math.max.apply(Math, fixes.map(function(o) { return o.gpsalt; }))
-            maxbaro = Math.max.apply(Math, fixes.map(function(o) { return o.pressalt; }))
-            if (maxbaro > maxgps) {
-                ceil = maxbaro
-            } else {
-                ceil = maxgps
-            }
-            datestr = flight.date
-            s = datestr.split('-')
-            for (let fix of fixes) {
-                latlngs.push([fix.lat, fix.lng]);
-                gps_alt_data.push([new Date(Date.UTC(parseInt(s[0]), parseInt(s[1] - 1), parseInt(s[2]), fix.time.h, fix.time.m, fix.time.s, 0)).getTime(), fix.gpsalt, fix.gpsalt, fix.lat, fix.lng])
-                baro_alt_data.push([new Date(Date.UTC(parseInt(s[0]), parseInt(s[1] - 1), parseInt(s[2]), fix.time.h, fix.time.m, fix.time.s, 0)).getTime(), fix.pressalt, fix.pressalt])
-                indix += 1;
-            }
-
-
-            $('#map_title').html('Flight started at ' + flight.site + ' on ' + flight.date + ' ' + flight.time + ' UTC')
-
+                var indix = 0;
+                maxgps = Math.max.apply(Math, fixes.map(function(o) { return o.gpsalt; }))
+                maxbaro = Math.max.apply(Math, fixes.map(function(o) { return o.pressalt; }))
+                if (maxbaro > maxgps) {
+                    ceil = maxbaro
+                } else {
+                    ceil = maxgps
+                }
+                datestr = flight.date
+                s = datestr.split('-')
+                for (let fix of fixes) {
+                    latlngs.push([fix.lat, fix.lng]);
+                    gps_alt_data.push([new Date(Date.UTC(parseInt(s[0]), parseInt(s[1] - 1), parseInt(s[2]), fix.time.h, fix.time.m, fix.time.s, 0)).getTime(), fix.gpsalt, fix.gpsalt, fix.lat, fix.lng])
+                    baro_alt_data.push([new Date(Date.UTC(parseInt(s[0]), parseInt(s[1] - 1), parseInt(s[2]), fix.time.h, fix.time.m, fix.time.s, 0)).getTime(), fix.pressalt, fix.pressalt])
+                    indix += 1;
+                }
 
 
-            Highcharts.chart('chartdiv', {
-                chart: {
-                    type: 'area'
+                $('#map_title').html('Flight started at ' + flight.site + ' on ' + flight.date + ' ' + flight.time + ' UTC')
 
-                },
-                accessibility: {
-                    description: 'Image description: A chart of GPS and barometric altirude over time.'
-                },
-                title: {
-                    text: 'Altitude variation over flight time'
-                },
-                xAxis: {
-                    type: 'datetime'
-                },
-                yAxis: {
+
+
+                Highcharts.chart('chartdiv', {
+                    chart: {
+                        type: 'area'
+
+                    },
+                    accessibility: {
+                        description: 'Image description: A chart of GPS and barometric altirude over time.'
+                    },
                     title: {
-                        text: 'altitude'
+                        text: 'Altitude variation over flight time'
                     },
-                    ceiling: ceil,
-
-                    labels: {
-                        formatter: function() {
-                            return this.value + ' m';
-                        }
-                    }
-                },
-                tooltip: {
-                    pointFormat: '{series.name} altitude <b>{point.y:,.0f}</b> m'
-                },
-                plotOptions: {
-                    area: {
-                        marker: {
-                            enabled: false,
-                            symbol: 'circle',
-                            radius: 2,
-                            states: {
-                                hover: {
-                                    enabled: true
-                                }
-                            }
-                        }
-                    }
-                },
-                series: [{
-                        name: 'GPS',
-                        keys: ['name', 'custom.value', 'y', 'custom.lat', 'custom.lng'],
-                        point: {
-                            events: {
-                                mouseOver: function() {
-
-                                    var newLatLng = new L.LatLng(this.custom.lat, this.custom.lng);
-                                    cloud.setLatLng(newLatLng);
-                                }
-                            }
+                    xAxis: {
+                        type: 'datetime'
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'altitude'
                         },
-                        data: gps_alt_data
+                        ceiling: ceil,
+
+                        labels: {
+                            formatter: function() {
+                                return this.value + ' m';
+                            }
+                        }
                     },
-                    {
-                        name: 'Baro',
-                        visible: false,
-                        keys: ['name', 'custom.value', 'y'],
-                        data: baro_alt_data
-                    }
+                    tooltip: {
+                        pointFormat: '{series.name} altitude <b>{point.y:,.0f}</b> m'
+                    },
+                    plotOptions: {
+                        area: {
+                            marker: {
+                                enabled: false,
+                                symbol: 'circle',
+                                radius: 2,
+                                states: {
+                                    hover: {
+                                        enabled: true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                            name: 'GPS',
+                            keys: ['name', 'custom.value', 'y', 'custom.lat', 'custom.lng'],
+                            point: {
+                                events: {
+                                    mouseOver: function() {
 
-                ]
-            });
+                                        var newLatLng = new L.LatLng(this.custom.lat, this.custom.lng);
+                                        cloud.setLatLng(newLatLng);
+                                    }
+                                }
+                            },
+                            data: gps_alt_data
+                        },
+                        {
+                            name: 'Baro',
+                            visible: false,
+                            keys: ['name', 'custom.value', 'y'],
+                            data: baro_alt_data
+                        }
 
-            var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
-            var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
-            var greenIcon = new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            });
+                    ]
+                });
 
-            var redIcon = new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            });
-            var blueIcon = new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            });
+                var mymap = L.map('mapinsert').setView([flight.latTo, flight.longTo], 13);
+                var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
+                var greenIcon = new L.Icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
 
-            cloud = L.marker([flight.latTo, flight.longTo], {
-                icon: blueIcon
-            }).addTo(mymap)
-            L.marker([flight.latTo, flight.longTo], { icon: greenIcon }).addTo(mymap);
-            L.marker([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]], { icon: redIcon }).addTo(mymap);
+                var redIcon = new L.Icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+                var blueIcon = new L.Icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+
+                cloud = L.marker([flight.latTo, flight.longTo], {
+                    icon: blueIcon
+                }).addTo(mymap)
+                L.marker([flight.latTo, flight.longTo], { icon: greenIcon }).addTo(mymap);
+                L.marker([latlngs[latlngs.length - 1][0], latlngs[latlngs.length - 1][1]], { icon: redIcon }).addTo(mymap);
 
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(mymap);
-            mymap.fitBounds(polyline.getBounds());
-            if (flight.hasComment) {
-                $('#comm-data').html('<span class="triangle"></span>' + flight.comments)
-                $('#pilot_name').html($('#famous-pilot').html())
-                L.easyButton('fa-comment-dots', function(btn, map) {
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(mymap);
+                mymap.fitBounds(polyline.getBounds());
+                if (flight.hasComment) {
+                    $('#comm-data').html('<span class="triangle"></span>' + flight.comments)
+                    $('#pilot_name').html($('#famous-pilot').html())
+                    L.easyButton('fa-comment-dots', function(btn, map) {
 
-                    $('#comment-collapse').toggle()
+                        $('#comment-collapse').toggle()
+                        setTimeout(function() {
+                            mymap.invalidateSize();
+                            mymap.fitBounds(polyline.getBounds());
+                        }, 100);
+                    }).addTo(mymap);
+                }
+
+                L.easyButton('fa-chart-area', function(btn, map) {
+
+                    var myCollapse = document.getElementById('collapseExample')
+                    var bsCollapse = new bootstrap.Collapse(myCollapse, {
+                        toggle: true
+                    })
                     setTimeout(function() {
                         mymap.invalidateSize();
                         mymap.fitBounds(polyline.getBounds());
                     }, 100);
                 }).addTo(mymap);
-            }
 
-            L.easyButton('fa-chart-area', function(btn, map) {
+                L.easyButton('fa-crosshairs', function(btn, map) {
+                    setTimeout(function() {
+                        mymap.invalidateSize();
+                        mymap.fitBounds(polyline.getBounds());
+                    }, 100);
 
-                var myCollapse = document.getElementById('collapseExample')
-                var bsCollapse = new bootstrap.Collapse(myCollapse, {
-                    toggle: true
-                })
-                setTimeout(function() {
-                    mymap.invalidateSize();
-                    mymap.fitBounds(polyline.getBounds());
-                }, 100);
-            }).addTo(mymap);
-
-            L.easyButton('fa-crosshairs', function(btn, map) {
-                setTimeout(function() {
-                    mymap.invalidateSize();
-                    mymap.fitBounds(polyline.getBounds());
-                }, 100);
-
-            }).addTo(mymap);
+                }).addTo(mymap);
 
 
-            $('.commtoggle').click(function() {
-                $('#comment-collapse').hide()
+                $('.commtoggle').click(function() {
+                    $('#comment-collapse').hide()
+
+                    setTimeout(function() {
+                        mymap.invalidateSize();
+                        mymap.fitBounds(polyline.getBounds());
+                    }, 100);
+
+                });
 
                 setTimeout(function() {
                     mymap.invalidateSize();
                     mymap.fitBounds(polyline.getBounds());
                 }, 100);
-
             });
 
-            setTimeout(function() {
-                mymap.invalidateSize();
-                mymap.fitBounds(polyline.getBounds());
-            }, 100);
-        });
-
-    } else {
-        $('#mapinsert').html('<H1> There is no IGC data for this flight</H1>');
+        } else {
+            $('#mapinsert').html('<H1> There is no IGC data for this flight</H1>');
+        }  
+    }else{
+        $('#mapinsert').html('<H1> This flight does not exists.</H1>');
+    }
+        
+        window.location.hash = 'flight_' + id
     }
 
 }
@@ -309,11 +317,8 @@ function redrawTable(filteredData) {
                 var currentRow = $(this).closest("tr");
                 var data = $('#flights_table').DataTable().row(currentRow).data();
                 var id = parseInt(data['id']);
-                var igc = data['hasIGC'];
-                var flight = filteredData.find(obj => {
-                    return obj.id === id
-                })
-                setViewer(id, igc, flight)
+
+                setViewer(id)
 
             });
         })
@@ -327,7 +332,7 @@ function bindAll() {
         var flight = filteredData.find(obj => {
             return obj.id === id
         })
-        setViewer(id, true);
+        setViewer(id);
 
     });
 

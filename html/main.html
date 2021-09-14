@@ -5,13 +5,14 @@
     [[[header]]]
 </head>
 
-<body>
+<body data-bs-spy="scroll" data-bs-target="#main_tab">
     [[[skeleton]]]
     [[[modal]]]
     <script type="text/javascript">
     </script>
     <script type="text/javascript">
     $(document).ready(function() {
+
         redrawWingsFilter(wings);
         redrawYearsFilter(years);
         redrawSitesFilter(sites);
@@ -20,10 +21,10 @@
         $('.resizer').on('shown.bs.tab', function(event) {
             //event.target // newly activated tab
             //event.relatedTarget // previous active tab
-           
+
             window.dispatchEvent(new Event('resize'));
         })
-      
+
         $("#site_input").on("keyup", function() {
             var value = $(this).val().toLowerCase();
             $("#sitesFilter li.filterable").filter(function() {
@@ -37,17 +38,15 @@
             })
             $('#mapinsert').remove();
             $('<div id="mapinsert" class="modal-body"></div>').insertAfter("#before_modal");
+            document.location.hash = '#'
         })
         $('.table_viewer').click(function() {
 
             var currentRow = $(this).closest("tr");
             var data = $('#flights_table').DataTable().row(currentRow).data();
             var id = parseInt(data['id']);
-            var igc = data['hasIGC'];
-            var flight = filteredData.find(obj => {
-                return obj.id === id
-            })
-            setViewer(id, igc, flight)
+
+            setViewer(id)
 
         });
 
@@ -120,7 +119,30 @@
         var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
+        var hash = location.hash.replace(/^#/, ''); // ^ means starting, meaning only match the first hash
+       
+        if (hash) {
+            if (hash.startsWith('flight_')) {
+                var id = parseInt(hash.replace('flight_', ''))
+                var myModal = new bootstrap.Modal(document.getElementById("mapModal"), {});
+                document.onreadystatechange = function() {
+                    myModal.show();
+                    setViewer(id)
+                };
+                
+            } else {
+                $('.nav-tabs a[href="#' + hash + '"]').tab('show');
+            }
 
+
+        }
+
+        // Change hash for page-reload
+        $('.nav-tabs a').on('shown.bs.tab', function(e) {
+
+            window.location.hash = e.target.hash
+
+        })
     });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
