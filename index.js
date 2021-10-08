@@ -132,7 +132,7 @@ processFlights = function(data) {
         flight.latTo = row.V_LatDeco
         flight.longTo = row.V_LongDeco
         flight.altTo = row.V_AltDeco
-
+        flight.durations ={}
         if (row.V_Pays != '' && row.V_Pays !== undefined && row.V_Pays !== null) {
             flight.country = row.V_Pays
         } else {
@@ -154,6 +154,15 @@ processFlights = function(data) {
             ffvl_score = result_ffvl.score
             xcontest_dist = result_xcontest.scoreInfo.distance
             xcontest_score = result_xcontest.score
+
+            // console.log("---------------------")
+            // console.log("---------------------")
+            // console.log("---------------------")
+            flight.durations.total = analyzedData.track.duration
+            flight.durations.gliding = analyzedData.track['gliding-duration']
+            flight.durations.thermal = analyzedData.track['thermaling-duration']
+            flight.durations.left = analyzedData.track['left-thermaling-duration']
+            flight.durations.right = analyzedData.track['right-thermaling-duration']
 
             lat_to = analyzedData.route.takeoff.lat
             lng_to = analyzedData.route.takeoff.lng
