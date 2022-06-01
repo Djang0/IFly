@@ -1,0 +1,7 @@
+{
+    "pilots_db": "./pilots.db",
+    "work_dir": "./tmp/",
+    "website_root": "/path/to/website/",
+    "google_analytics_id": "G-randomtag",
+    "app_dir":"/path/to/IFly/"
+}

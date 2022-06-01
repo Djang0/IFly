@@ -10,9 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "cli-progress": "^3.9.0",
+    "csv-parse": "^5.1.0",
     "dayjs": "^1.10.6",
+    "fs-extra": "^10.1.0",
     "igc-analyzer": "0.0.1",
     "igc-xc-score": "1.6.0",
+    "nodemailer": "^6.7.5",
     "sqlite3": "^5.0.2"
   }
 }

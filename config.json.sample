@@ -1,10 +1,10 @@
 {
-  "pilot": "Ludovic Reenaers",
-  "country": "Belgium",
-  "city": "Liège",
+  "pilot": "name surname",
+  "country": "country",
+  "city": "city",
   "logFly_file": "Logfly.db",
   "federation": "FBVL",
-  "pilot_id": "be-06957",
+  "pilot_id": "federation pilot id",
 
   "licenses": [{
       "license": "Pilote parapente (1301)",

@@ -6,7 +6,6 @@ const {
     scoringRules,
     solver
 } = require('igc-xc-score');
-console.log(solver);
 const cliProgress = require('cli-progress');
 const sqlite3 = require('sqlite3').verbose();
 const config = JSON.parse(fs.readFileSync('config.json'));

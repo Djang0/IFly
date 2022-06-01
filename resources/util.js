@@ -49,7 +49,7 @@ function setViewer(id) {
             if (flight.hasIGC) {
                 var latlngs = []
 
-                $.getJSON(id + ".js", function(fixes) {
+                $.getJSON("json/"+id + ".js", function(fixes) {
 
                     if ($('#mapinsert').hasClass('leaflet-container')) {
 
