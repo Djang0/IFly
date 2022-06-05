@@ -1,8 +1,18 @@
 const fs = require('fs');
 const fse = require('fs-extra');
+const app_config = JSON.parse(fs.readFileSync('app_config.json'));
 const Template = require('./template');
 const IGCAnalyzer = require('./my-igc-analyzer');
 const IGCParser = require('igc-parser');
+const nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+    service: 'sendgrid',
+    auth: {
+        user: app_config.mail_user,
+        pass: app_config.mail_pws
+    }
+});
+
 const {
     scoringRules,
     solver
@@ -12,7 +22,7 @@ const {
 } = require('child_process');
 const cliProgress = require('cli-progress');
 const sqlite3 = require('sqlite3').verbose();
-const app_config = JSON.parse(fs.readFileSync('app_config.json'));
+
 //var template = fs.readFileSync('template.html').toString();
 var template = new Template().getContent();
 var dayjs = require('dayjs');
@@ -464,10 +474,11 @@ processFlights = function (data, work_dir, config, rowid, dbp, new_etag, email) 
                     console.log(err)
                 } else {
                     console.log("Pilot's web dir created : " + pilot_web_dir);
+                    
                     fse.copySync(work_dir, pilot_web_dir, {
                         overwrite: true
                     });
-
+                    
                     console.log("pilot's page copied to website!");
                     git_comm = "cd " + app_config.website_root + "; "
                     git_comm += "git add . ;"
@@ -484,11 +495,13 @@ processFlights = function (data, work_dir, config, rowid, dbp, new_etag, email) 
                             // update etag to db
                             dbp.serialize(function () {
                                 dbp.run(
-                                    'update pilots set etag=$new where email=$mail',
-                                    {$new:new_etag, $mail:email},
+                                    'update pilots set etag=$new where email=$mail', {
+                                        $new: new_etag,
+                                        $mail: email
+                                    },
                                     function (error) {
                                         if (error) {
-                                            return console.log("err=>"+error.message);
+                                            return console.log("err=>" + error.message);
                                         }
                                         console.log(`updated a row with the email: ${email}`);
                                     }
@@ -503,7 +516,21 @@ processFlights = function (data, work_dir, config, rowid, dbp, new_etag, email) 
                                 //console.log(flights_table);
                             });
                             // send report to email
-                            
+                            txt='please visit https://ifly.upsky.be/p/'+rowid
+                            var mailOptions = {
+                                from: 'lr@upsky.be',
+                                to: email,
+                                subject: 'IFLY : Your pilot page have been updated',
+                                text: txt
+                            };
+
+                            transporter.sendMail(mailOptions, function (error, info) {
+                                if (error) {
+                                    console.log(error);
+                                } else {
+                                    console.log('Email sent: ' + info.response);
+                                }
+                            });
                             //clean work dir
                             fs.rmdirSync(app_config.work_dir, {
                                 recursive: true

@@ -82,7 +82,7 @@ processPilots = function (data, dbp) {
                 remote_etag = stdout.split('\n')[0].replace(' ', '');
                 console.log("remote" + remote_etag + "//" + row.etag)
                 if (remote_etag) {
-                    if (remote_etag != row.etag) {
+                    if (remote_etag != row.etag || 1==1) {
                         console.log(row.rowid+" "+row.email+" "+row.etag+" "+row.zip_url)
                         processZip(row.email, remote_etag, row.rowid, row.zip_url, dbp)
                     }
